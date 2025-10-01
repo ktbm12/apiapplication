@@ -62,10 +62,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "ecommerce_project.urls"
 
+# Templates
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "templates"],  # dossier templates à la racine
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -77,6 +78,22 @@ TEMPLATES = [
         },
     },
 ]
+
+
+#Static files
+STATIC_URL = "/static/"
+
+# Dossier des fichiers statiques globaux (ex: Tailwind CSS compilé)
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # tu mets ton input.css et output.css ici
+]
+
+# Dossier où Django collectera tous les fichiers statiques pour la prod
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Media files (images uploadées par les utilisateurs)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 WSGI_APPLICATION = "ecommerce_project.wsgi.application"
 DATABASES = {
