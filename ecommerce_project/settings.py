@@ -37,12 +37,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     # Apps locales
-    "ecommerce_project.users",
-    "ecommerce_project.catalogue",
-    "ecommerce_project.promotions",
-    "ecommerce_project.contact",
-    "ecommerce_project.payments",
-    "ecommerce_project.orders",
+    "users",
+    "catalogue",
+    "promotions",
+    "contact",
+    "payments",
+    "orders",
 
     # Tiers
     "rest_framework",

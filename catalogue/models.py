@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from ecommerce_project.users.models import BaseModel
+from users.models import BaseModel
 
 
 

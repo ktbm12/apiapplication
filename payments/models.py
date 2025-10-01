@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
-from ecommerce_project.users.models import BaseModel
-from ecommerce_project.orders.models import Order
+from users.models import BaseModel
+from orders.models import Order
 
 User = get_user_model()
 
