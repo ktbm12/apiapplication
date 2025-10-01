@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 import environ
+from decouple import config
+
 
 # ==========================
 # BASE DIR & ENV
@@ -36,10 +38,10 @@ INSTALLED_APPS = [
 
     # Apps locales
     "ecommerce_project.users",
-    "ecommerce_project.catalog",
+    "ecommerce_project.catalogue",
     "ecommerce_project.promotions",
     "ecommerce_project.contact",
-    "ecommerce_project.payment",
+    "ecommerce_project.payments",
     "ecommerce_project.orders",
 
     # Tiers
@@ -77,15 +79,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "ecommerce_project.wsgi.application"
-
-# ==========================
-# DATABASE
-# ==========================
 DATABASES = {
-    "default": env.db(
-        "DATABASE_URL",
-        default=f"postgres://{env('DB_USER')}:{env('DB_PASSWORD')}@{env('DB_HOST')}:{env('DB_PORT')}/{env('DB_NAME')}"
-    )
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME", default="laptop_shop_db"),
+        "USER": config("DB_USER", default="postgres"),
+        "PASSWORD": config("DB_PASSWORD", default="postgres"),
+        "HOST": config("DB_HOST", default="localhost"),
+        "PORT": config("DB_PORT", default="5432"),
+    }
 }
 
 # ==========================
