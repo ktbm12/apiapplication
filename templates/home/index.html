@@ -1,5 +1,7 @@
-<!--#include virtual="includes/header.html" -->
-<!--#include virtual="includes/navbar.html" -->
+{% load static %}
+
+{% include "home/include/header.html" %}
+{% include "home/include/navbar.html" %}
 
     <!-- Hero Section -->
     <section class="hero">
@@ -25,22 +27,22 @@
             
             <div class="category-grid">
                 <a href="#" class="category-card">
-                    <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80" alt="Mode Femme">
+                    <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=2073&q=80" alt="Mode Femme">
                     <h3>Mode Femme</h3>
                 </a>
                 
                 <a href="#" class="category-card">
-                    <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Mode Homme">
+                    <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=1974&q=80" alt="Mode Homme">
                     <h3>Mode Homme</h3>
                 </a>
                 
                 <a href="#" class="category-card">
-                    <img src="https://images.unsplash.com/photo-1584302179602-e4819bb92daa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Électronique">
+                    <img src="https://images.unsplash.com/photo-1584302179602-e4819bb92daa?auto=format&fit=crop&w=2070&q=80" alt="Électronique">
                     <h3>Électronique</h3>
                 </a>
                 
                 <a href="#" class="category-card">
-                    <img src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Maison & Déco">
+                    <img src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?auto=format&fit=crop&w=2070&q=80" alt="Maison & Déco">
                     <h3>Maison & Déco</h3>
                 </a>
             </div>
@@ -65,4 +67,4 @@
         </div>
     </section>
 
-<!--#include virtual="includes/footer.html" -->
+{% include "home/include/footer.html" %}
