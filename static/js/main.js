@@ -1,157 +1,99 @@
-// Fonctions globales pour toutes les pages
-document.addEventListener('DOMContentLoaded', function() {
-    // Gestion du compteur du panier
-    const cartCount = document.querySelector('.cart-count');
-    let cartItems = 3; // Valeur initiale
-
-    // Animation des éléments au défilement
-    const animateOnScroll = function() {
-        const elements = document.querySelectorAll('.category-card, .product-card');
-        
-        elements.forEach(element => {
-            const elementTop = element.getBoundingClientRect().top;
-            const elementVisible = 150;
-            
-            if (elementTop < window.innerHeight - elementVisible) {
-                element.style.opacity = "1";
-                element.style.transform = "translateY(0)";
-            }
-        });
-    };
-
-    // Initialiser les animations
-    const animatedElements = document.querySelectorAll('.category-card, .product-card');
-    animatedElements.forEach(element => {
-        element.style.opacity = "0";
-        element.style.transform = "translateY(30px)";
-        element.style.transition = "all 0.6s ease";
-    });
-
-    // Écouter l'événement de défilement
-    window.addEventListener('scroll', animateOnScroll);
+// Compte à rebours pour les promotions
+function updateCountdown() {
+    const countdownDate = new Date();
+    countdownDate.setDate(countdownDate.getDate() + 12); // 12 jours à partir d'aujourd'hui
     
-    // Déclencher une première fois
-    animateOnScroll();
-
-    // Gestion de la recherche
-    const searchInput = document.querySelector('.search-bar input');
-    const searchButton = document.querySelector('.search-bar button');
-
-    searchButton.addEventListener('click', function() {
-        performSearch();
-    });
-
-    searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            performSearch();
-        }
-    });
-
-    function performSearch() {
-        const searchTerm = searchInput.value.trim();
-        if (searchTerm) {
-            window.location.href = `tous-les-articles.html?search=${encodeURIComponent(searchTerm)}`;
-        }
+    const now = new Date().getTime();
+    const distance = countdownDate - now;
+    
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+    const countdownNumbers = document.querySelectorAll('.countdown-number');
+    if (countdownNumbers.length >= 4) {
+        countdownNumbers[0].textContent = days.toString().padStart(2, '0');
+        countdownNumbers[1].textContent = hours.toString().padStart(2, '0');
+        countdownNumbers[2].textContent = minutes.toString().padStart(2, '0');
+        countdownNumbers[3].textContent = seconds.toString().padStart(2, '0');
     }
+}
 
-    // Gestion des dropdowns
-    const dropdowns = document.querySelectorAll('.dropdown');
+// Animation au défilement
+function initScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
     
-    dropdowns.forEach(dropdown => {
-        dropdown.addEventListener('mouseenter', function() {
-            this.querySelector('.dropdown-menu').style.opacity = "1";
-            this.querySelector('.dropdown-menu').style.visibility = "visible";
-            this.querySelector('.dropdown-menu').style.transform = "translateY(0)";
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = 1;
+                entry.target.style.transform = 'translateY(0)';
+            }
         });
-        
-        dropdown.addEventListener('mouseleave', function() {
-            this.querySelector('.dropdown-menu').style.opacity = "0";
-            this.querySelector('.dropdown-menu').style.visibility = "hidden";
-            this.querySelector('.dropdown-menu').style.transform = "translateY(10px)";
+    }, observerOptions);
+    
+    // Observer les sections pour l'animation
+    const sections = document.querySelectorAll('.categories, .featured-products, .promotions, .newsletter');
+    sections.forEach(section => {
+        section.style.opacity = 0;
+        section.style.transform = 'translateY(20px)';
+        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(section);
+    });
+}
+
+// Gestion du panier
+function initCart() {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+    const cartCount = document.querySelector('.cart-count');
+    
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Animation du bouton
+            this.style.backgroundColor = '#27ae60';
+            this.innerHTML = '<i class="fas fa-check"></i>';
+            
+            // Mettre à jour le compteur du panier
+            let currentCount = parseInt(cartCount.textContent);
+            cartCount.textContent = currentCount + 1;
+            
+            // Réinitialiser le bouton après 2 secondes
+            setTimeout(() => {
+                this.style.backgroundColor = '';
+                this.innerHTML = '<i class="fas fa-shopping-cart"></i>';
+            }, 2000);
         });
     });
+}
 
-    // Fonction pour ajouter au panier
-    window.addToCart = function(productId, productName) {
-        cartItems++;
-        cartCount.textContent = cartItems;
-        
-        // Animation de feedback
-        cartCount.style.transform = 'scale(1.5)';
-        setTimeout(() => {
-            cartCount.style.transform = 'scale(1)';
-        }, 300);
-        
-        // Message de confirmation
-        showNotification(`${productName} ajouté au panier`, 'success');
-    };
-
-    // Fonction d'affichage des notifications
-    window.showNotification = function(message, type) {
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.textContent = message;
-        
-        // Styles de base pour les notifications
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 500;
-            z-index: 10000;
-            box-shadow: var(--shadow-lg);
-            animation: slideInRight 0.3s ease-out;
-            max-width: 300px;
-        `;
-        
-        if (type === 'success') {
-            notification.style.backgroundColor = 'var(--success-color)';
-        } else if (type === 'error') {
-            notification.style.backgroundColor = 'var(--secondary-color)';
-        } else {
-            notification.style.backgroundColor = 'var(--accent-color)';
-        }
-        
-        document.body.appendChild(notification);
-        
-        // Supprimer la notification après 5 secondes
-        setTimeout(() => {
-            notification.style.animation = 'slideOutRight 0.3s ease-in';
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.remove();
-                }
-            }, 300);
-        }, 5000);
-    };
-
-    // Ajouter les keyframes d'animation pour les notifications
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
+// Initialisation au chargement de la page
+document.addEventListener('DOMContentLoaded', function() {
+    // Démarrer le compte à rebours
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+    
+    // Initialiser les animations
+    initScrollAnimations();
+    
+    // Initialiser la gestion du panier
+    initCart();
+    
+    // Gestion de la recherche
+    const searchForm = document.querySelector('.search-bar');
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const searchInput = this.querySelector('input');
+            if (searchInput.value.trim() !== '') {
+                alert('Recherche pour: ' + searchInput.value);
+                // Ici vous redirigeriez vers la page de résultats de recherche
             }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes slideOutRight {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-        }
-    `;
-    document.head.appendChild(style);
+        });
+    }
 });

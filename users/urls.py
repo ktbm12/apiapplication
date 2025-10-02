@@ -4,5 +4,7 @@ from . import views
 app_name = "users"
 
 urlpatterns = [
-    path("", views.home, name="home"),  # http://127.0.0.1:8000/
+    path("", views.home, name="home"),
+    path("login/", views.login, name="login"),
+    path("contact/", views.contact, name="contact"),
 ]
