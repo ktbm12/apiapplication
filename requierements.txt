@@ -1,0 +1,54 @@
+# --- Core Framework ---
+Django==4.2.11              # LTS version stable de Django
+
+# --- Database & ORM ---
+psycopg2-binary==2.9.9       # PostgreSQL (à utiliser si tu passes sur PostgreSQL en prod)
+mysqlclient==2.2.4           # Optionnel si tu veux MySQL au lieu de PostgreSQL
+django-model-utils==4.5.1    # Modèles de base (TimeStampedModel, ActivatorModel, etc.)
+
+# --- Authentication & Users ---
+django-allauth==0.63.3       # Authentification sociale (Google, Facebook, etc.)
+django-crispy-forms==2.3     # Formulaires stylés
+crispy-bootstrap5==2024.2    # Bootstrap 5 pour crispy-forms
+
+# --- File & Images ---
+Pillow==10.4.0               # Manipulation d’images
+django-cleanup==8.1.0        # Supprime automatiquement les fichiers liés quand un objet est supprimé
+
+# --- Payments & Ecommerce ---
+stripe==10.2.0               # Paiement Stripe
+django-money==3.4.1          # Gestion des prix et devises
+
+# --- Email & Notifications ---
+django-anymail[mailgun]==10.4 # Envoi d’e-mails transactionnels via Mailgun/Sendgrid/etc.
+
+# --- API & Frontend ---
+djangorestframework==3.15.2  # API REST pour mobile / frontend JS
+drf-yasg==1.21.7             # Documentation Swagger pour DRF
+django-cors-headers==4.4.0   # Autoriser React/Vue/Next.js à consommer l’API
+
+# --- Performance & Security ---
+django-redis==5.4.0          # Cache et sessions via Redis
+redis==5.1.1                 # Client Redis
+django-debug-toolbar==4.4.6  # Debug en local
+
+# --- Background Tasks & Async ---
+celery==5.4.0                # Tâches asynchrones (envoi d’email, paiements, etc.)
+django-celery-beat==2.7.0    # Scheduler pour Celery
+django-celery-results==2.6.0 # Suivi des résultats Celery
+
+# --- Static & Media Storage ---
+whitenoise==6.7.0            # Servir les fichiers statiques en prod
+boto3==1.35.35               # AWS S3 pour stocker les fichiers
+django-storages==1.14.4      # Intégration stockage cloud (S3, GCP, Azure)
+
+# --- Testing & Quality ---
+pytest==8.3.3
+pytest-django==4.9.0
+factory-boy==3.3.1
+black==24.8.0
+flake8==7.1.1
+isort==5.13.2
+
+# --- Environment ---
+python-decouple==3.8         # Gestion des variables d’environnement (.env)

@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ecommerce{% endblock %}</title>
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white shadow">
+        <div class="container mx-auto flex justify-between items-center py-4 px-6">
+            <a href="/" class="text-2xl font-bold text-blue-600">🛒 Ecommerce</a>
+            <nav class="space-x-6">
+                <a href="/" class="hover:text-blue-600">Accueil</a>
+                <a href="/catalogue/" class="hover:text-blue-600">Catalogue</a>
+                <a href="/contact/" class="hover:text-blue-600">Contact</a>
+                <a href="/orders/" class="hover:text-blue-600">Commandes</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contenu -->
+    <main class="flex-1">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 mt-10">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 Ecommerce Project - Tous droits réservés</p>
+        </div>
+    </footer>
+
+</body>
+</html>

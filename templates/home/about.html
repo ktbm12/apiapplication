@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>À Propos de Nous | LuxeShop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Variables CSS */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+            --light-color: #f8f9fa;
+            --dark-color: #2c3e50;
+            --text-color: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Reset et styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: #ffffff;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .top-bar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 0;
+            font-size: 0.9rem;
+        }
+
+        .top-bar .container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .top-bar a {
+            color: white;
+            margin-left: 20px;
+            transition: var(--transition);
+        }
+
+        .top-bar a:hover {
+            color: var(--secondary-color);
+        }
+
+        .main-header {
+            padding: 20px 0;
+        }
+
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--secondary-color);
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .header-actions a {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .header-actions a:hover {
+            color: var(--secondary-color);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-menu li {
+            position: relative;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 18px 25px;
+            color: white;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hero Section */
+        .about-hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a202c 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        /* Section Notre Histoire */
+        .our-story {
+            padding: 100px 0;
+            background: var(--light-color);
+        }
+
+        .story-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .story-content h2 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .story-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+        }
+
+        .story-content p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        .story-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .story-image {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .story-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .image-placeholder {
+            height: 500px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Valeurs */
+        .our-values {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 70px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .value-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 4px solid var(--secondary-color);
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .value-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .value-card h3 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .value-card p {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* Équipe */
+        .our-team {
+            padding: 100px 0;
+            background: var(--light-color);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .team-member {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .member-image {
+            height: 300px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+        }
+
+        .member-info {
+            padding: 30px 25px;
+        }
+
+        .member-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .member-role {
+            color: var(--secondary-color);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .member-bio {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Engagement */
+        .our-commitment {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .commitment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .commitment-item {
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+        }
+
+        .commitment-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--light-color);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+            flex-shrink: 0;
+        }
+
+        .commitment-content h3 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .commitment-content p {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* CTA Section */
+        .about-cta {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a202c 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 80px 0 0;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+
+        .footer-column p {
+            opacity: 0.8;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column ul li a {
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .footer-column ul li a:hover {
+            opacity: 1;
+            padding-left: 5px;
+            color: var(--secondary-color);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .footer-social a {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .footer-social a:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px 0;
+            text-align: center;
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .story-container {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-header .container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-menu {
+                flex-wrap: wrap;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.3rem;
+            }
+            
+            .hero-content p {
+                font-size: 1.1rem;
+            }
+            
+            .story-stats {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .top-bar .container {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .values-grid,
+            .team-grid,
+            .commitment-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="top-bar">
+            <div class="container">
+                <div class="contact-info">
+                    <span><i class="fas fa-phone"></i> +33 1 23 45 67 89</span>
+                    <span><i class="fas fa-envelope"></i> contact@luxeshop.com</span>
+                </div>
+                <div class="top-links">
+                    <a href="#"><i class="fas fa-question-circle"></i> Aide</a>
+                    <a href="#"><i class="fas fa-shipping-fast"></i> Suivi de commande</a>
+                    <a href="login.html"><i class="fas fa-user"></i> Mon compte</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-header">
+            <div class="container">
+                <div class="logo">
+                    <i class="fas fa-crown"></i>
+                    Luxe<span>Shop</span>
+                </div>
+                
+                <div class="header-actions">
+                    <a href="#"><i class="fas fa-heart"></i></a>
+                    <a href="#" class="cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">3</span>
+                    </a>
+                    <a href="user-dashboard.html"><i class="fas fa-user"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <nav>
+            <div class="container">
+                <ul class="nav-menu">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="tous-les-articles.html">Boutique</a></li>
+                    <li><a href="promotions.html">Promotions</a></li>
+                    <li><a href="about.html" style="background-color: rgba(255,255,255,0.1);">À Propos</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>L'excellence du shopping en ligne</h1>
+                <p>Découvrez l'histoire derrière LuxeShop et notre engagement à vous offrir une expérience shopping exceptionnelle</p>
+                <a href="#notre-histoire" class="btn btn-outline">Découvrir notre histoire</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notre Histoire -->
+    <section class="our-story" id="notre-histoire">
+        <div class="container">
+            <div class="story-container">
+                <div class="story-content">
+                    <h2>Notre Histoire</h2>
+                    <p>Fondé en 2018, LuxeShop est né d'une vision simple mais ambitieuse : révolutionner l'expérience du shopping en ligne en alliant l'élégance du luxe à la commodité du numérique.</p>
+                    <p>Notre parcours a commencé avec une petite équipe passionnée déterminée à créer une plateforme où chaque détail compte, où chaque interaction reflète notre engagement envers l'excellence.</p>
+                    <p>Aujourd'hui, nous sommes fiers de compter parmi les destinations shopping en ligne les plus prisées, avec une communauté de clients fidèles qui partagent notre passion pour la qualité et l'authenticité.</p>
+                    
+                    <div class="story-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">5+</span>
+                            <span class="stat-label">Années d'expertise</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">50K+</span>
+                            <span class="stat-label">Clients satisfaits</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Marques partenaires</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="story-image">
+                    <div class="image-placeholder">
+                        <i class="fas fa-store"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nos Valeurs -->
+    <section class="our-values">
+        <div class="container">
+            <div class="section-header">
+                <h2>Nos Valeurs Fondamentales</h2>
+                <p>Ces principes guident chacune de nos décisions et interactions, garantissant une expérience exceptionnelle à chaque étape</p>
+            </div>
+            
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>Excellence</h3>
+                    <p>Nous nous engageons à offrir uniquement des produits de la plus haute qualité, soigneusement sélectionnés pour leur design et leur durabilité.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Passion</h3>
+                    <p>Notre amour pour le design et l'innovation nous pousse constamment à repousser les limites de l'excellence en matière de shopping en ligne.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Confiance</h3>
+                    <p>La transparence et la fiabilité sont au cœur de notre relation avec nos clients. Votre satisfaction est notre priorité absolue.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notre Équipe -->
+    <section class="our-team">
+        <div class="container">
+            <div class="section-header">
+                <h2>Rencontrez Notre Équipe</h2>
+                <p>Des passionnés dévoués à créer la meilleure expérience shopping pour vous</p>
+            </div>
+            
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-image">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="member-info">
+                        <div class="member-name">Sophie Martin</div>
+                        <div class="member-role">CEO & Fondatrice</div>
+                        <div class="member-bio">Visionnaire passionnée avec 15 ans d'expérience dans le e-commerce de luxe.</div>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <div class="member-info">
+                        <div class="member-name">Thomas Leroy</div>
+                        <div class="member-role">Directeur Technique</div>
+                        <div class="member-bio">Expert en innovation digitale et expérience utilisateur.</div>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="member-info">
+                        <div class="member-name">Marie Dubois</div>
+                        <div class="member-role">Directrice des Achats</div>
+                        <div class="member-bio">Curatrice talentueuse avec un œil infaillible pour les tendances.</div>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notre Engagement -->
+    <section class="our-commitment">
+        <div class="container">
+            <div class="section-header">
+                <h2>Notre Engagement</h2>
+                <p>Nous nous engageons à dépasser vos attentes à chaque interaction</p>
+            </div>
+            
+            <div class="commitment-grid">
+                <div class="commitment-item">
+                    <div class="commitment-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <div class="commitment-content">
+                        <h3>Livraison Excellence</h3>
+                        <p>Service de livraison premium avec suivi en temps réel et emballage soigné pour chaque commande.</p>
+                    </div>
+                </div>
+                
+                <div class="commitment-item">
+                    <div class="commitment-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <div class="commitment-content">
+                        <h3>Service Client 7j/7</h3>
+                        <p>Notre équipe dévouée est disponible pour vous accompagner à tout moment dans votre expérience shopping.</p>
+                    </div>
+                </div>
+                
+                <div class="commitment-item">
+                    <div class="commitment-icon">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <div class="commitment-content">
+                        <h3>Développement Durable</h3>
+                        <p>Engagés dans des pratiques commerciales responsables et un packaging écologique.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="about-cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Prêt à vivre l'expérience LuxeShop ?</h2>
+                <p>Rejoignez notre communauté de clients satisfaits et découvrez la différence LuxeShop</p>
+                <div class="cta-buttons">
+                    <a href="tous-les-articles.html" class="btn">Découvrir la Boutique</a>
+                    <a href="contact.html" class="btn btn-outline">Nous Contacter</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>LuxeShop</h3>
+                    <p>Votre destination shopping premium en ligne. Nous proposons une sélection soigneusement choisie de produits de qualité.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Informations</h3>
+                    <ul>
+                        <li><a href="about.html">À propos de nous</a></li>
+                        <li><a href="#">Livraison</a></li>
+                        <li><a href="#">Politique de retour</a></li>
+                        <li><a href="#">Conditions générales</a></li>
+                        <li><a href="#">Politique de confidentialité</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Service Client</h3>
+                    <ul>
+                        <li><a href="contact.html">Contactez-nous</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Modes de paiement</a></li>
+                        <li><a href="#">Guide des tailles</a></li>
+                        <li><a href="#">Suivi de commande</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Avenue des Champs-Élysées, 75008 Paris</li>
+                        <li><i class="fas fa-phone"></i> +33 1 23 45 67 89</li>
+                        <li><i class="fas fa-envelope"></i> contact@luxeshop.com</li>
+                        <li><i class="fas fa-clock"></i> Lun-Ven: 9h-19h, Sam: 10h-18h</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 LuxeShop. Tous droits réservés. | Conçu avec <i class="fas fa-heart" style="color: var(--secondary-color);"></i> pour vos moments précieux</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Animation au défilement
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.value-card, .team-member, .commitment-item');
+                
+                elements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        element.style.opacity = "1";
+                        element.style.transform = "translateY(0)";
+                    }
+                });
+            };
+            
+            // Initialiser les styles
+            const animatedElements = document.querySelectorAll('.value-card, .team-member, .commitment-item');
+            animatedElements.forEach(element => {
+                element.style.opacity = "0";
+                element.style.transform = "translateY(30px)";
+                element.style.transition = "all 0.6s ease";
+            });
+            
+            // Écouter l'événement de défilement
+            window.addEventListener('scroll', animateOnScroll);
+            
+            // Déclencher une première fois
+            animateOnScroll();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!-- Top Bar -->
+<div class="top-bar">
+    <div class="container">
+        <div class="contact-info">
+            <span><i class="fas fa-phone"></i> +33 1 23 45 67 89</span>
+            <span><i class="fas fa-envelope"></i> contact@luxeshop.com</span>
+        </div>
+        <div class="top-links">
+            <a href="{% url 'users:contact' %}"><i class="fas fa-question-circle"></i> contact</a>
+            <a href="#"><i class="fas fa-shipping-fast"></i> Suivi de commande</a>
+            <a href="{% url 'users:login' %}"><i class="fas fa-user"></i> Mon compte</a>
+        </div>
+    </div>
+</div>
+
+<!-- Header Principal -->
+<div class="main-header">
+    <div class="container">
+        <div class="logo">Luxe<span>Shop</span></div>
+        
+        <div class="search-bar">
+            <input type="text" placeholder="Rechercher un produit...">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="header-actions">
+            <a href="#"><i class="fas fa-heart"></i></a>
+            <a href="#" class="cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">3</span>
+            </a>
+            <a href="#"><i class="fas fa-user"></i></a>
+        </div>
+    </div>
+</div>
