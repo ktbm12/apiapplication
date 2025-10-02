@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord | LuxeShop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Variables CSS */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-color: #f8f9fa;
+            --dark-color: #2c3e50;
+            --text-color: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Reset et styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary-color) 0%, #1a202c 100%);
+            color: white;
+            padding: 2rem 0;
+            position: fixed;
+            width: 280px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--secondary-color);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), #2980b9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .user-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-info p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .sidebar-nav {
+            padding: 2rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: var(--secondary-color);
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.15);
+            border-left-color: var(--secondary-color);
+        }
+
+        .nav-item i {
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        .nav-badge {
+            background: var(--secondary-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-left: auto;
+        }
+
+        /* Main Content */
+        .main-content {
+            grid-column: 2;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: white;
+            width: 300px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .notification-bell {
+            position: relative;
+            background: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .notification-bell:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card.orders {
+            border-left-color: var(--success-color);
+        }
+
+        .stat-card.wishlist {
+            border-left-color: var(--warning-color);
+        }
+
+        .stat-card.points {
+            border-left-color: #9b59b6;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-card .stat-icon {
+            background: var(--accent-color);
+        }
+
+        .stat-card.orders .stat-icon {
+            background: var(--success-color);
+        }
+
+        .stat-card.wishlist .stat-icon {
+            background: var(--warning-color);
+        }
+
+        .stat-card.points .stat-icon {
+            background: #9b59b6;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            color: var(--success-color);
+        }
+
+        .trend-down {
+            color: var(--secondary-color);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Recent Orders */
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            background: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            color: var(--text-light);
+        }
+
+        .order-details {
+            flex: 1;
+        }
+
+        .order-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .order-meta {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .order-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-delivered {
+            background: #d4edda;
+            color: var(--success-color);
+        }
+
+        .status-shipping {
+            background: #cce7ff;
+            color: var(--accent-color);
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: var(--warning-color);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: white;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            text-align: left;
+            width: 100%;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+        }
+
+        .action-btn:nth-child(1) .action-icon {
+            background: var(--accent-color);
+        }
+
+        .action-btn:nth-child(2) .action-icon {
+            background: var(--success-color);
+        }
+
+        .action-btn:nth-child(3) .action-icon {
+            background: var(--warning-color);
+        }
+
+        .action-btn:nth-child(4) .action-icon {
+            background: #9b59b6;
+        }
+
+        .action-text h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .action-text p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Wishlist */
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .wishlist-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .wishlist-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .wishlist-image {
+            height: 140px;
+            background: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-light);
+        }
+
+        .wishlist-content {
+            padding: 1rem;
+        }
+
+        .wishlist-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .wishlist-price {
+            color: var(--secondary-color);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .wishlist-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: var(--transition);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                grid-column: 1;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .wishlist-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-crown"></i>
+                    Luxe<span>Shop</span>
+                </div>
+                
+                <div class="user-profile">
+                    <div class="user-avatar">JD</div>
+                    <div class="user-info">
+                        <h3>Jean Dupont</h3>
+                        <p>Membre Premium</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    Tableau de Bord
+                </a>
+                
+                <a href="#" class="nav-item">
+                    <i class="fas fa-shopping-bag"></i>
+                    Mes Commandes
+                    <span class="nav-badge">3</span>
+                </a>
+                
+                <a href="#" class="nav-item">
+                    <i class="fas fa-heart"></i>
+                    Mes Favoris
+                    <span class="nav-badge">5</span>
+                </a>
+                
+                <a href="#" class="nav-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Mes Adresses
+                </a>
+                
+                <a href="#" class="nav-item">
+                    <i class="fas fa-user-edit"></i>
+                    Profil
+                </a>
+                
+                <a href="#" class="nav-item">
+                    <i class="fas fa-lock"></i>
+                    Sécurité
+                </a>
+                
+                <a href="#" class="nav-item">
+                    <i class="fas fa-star"></i>
+                    Mes Avis
+                </a>
+                
+                <a href="#" class="nav-item">
+                    <i class="fas fa-gift"></i>
+                    Mes Coupons
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div>
+                    <h1>Bon retour, Jean !</h1>
+                    <p style="color: var(--text-light); margin-top: 0.5rem;">Voici votre activité récente</p>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Rechercher...">
+                    </div>
+                    
+                    <div class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            12.5%
+                        </div>
+                    </div>
+                    <div class="stat-value">24</div>
+                    <div class="stat-label">Commandes totales</div>
+                </div>
+                
+                <div class="stat-card orders">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            8.2%
+                        </div>
+                    </div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">En cours</div>
+                </div>
+                
+                <div class="stat-card wishlist">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="stat-trend trend-down">
+                            <i class="fas fa-arrow-down"></i>
+                            2.1%
+                        </div>
+                    </div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Articles favoris</div>
+                </div>
+                
+                <div class="stat-card points">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            15.3%
+                        </div>
+                    </div>
+                    <div class="stat-value">1,280</div>
+                    <div class="stat-label">Points fidélité</div>
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="content-grid">
+                <!-- Left Column -->
+                <div>
+                    <!-- Recent Orders -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Commandes Récentes</h3>
+                            <a href="#" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">Voir tout</a>
+                        </div>
+                        <div class="card-content">
+                            <div class="order-item">
+                                <div class="order-image">
+                                    <i class="fas fa-watch"></i>
+                                </div>
+                                <div class="order-details">
+                                    <div class="order-name">Montre Connectée Premium</div>
+                                    <div class="order-meta">#CMD-7842 • 15 Nov 2023</div>
+                                </div>
+                                <div class="order-status status-delivered">Livrée</div>
+                            </div>
+                            
+                            <div class="order-item">
+                                <div class="order-image">
+                                    <i class="fas fa-shoe-prints"></i>
+                                </div>
+                                <div class="order-details">
+                                    <div class="order-name">Chaussures Running Pro</div>
+                                    <div class="order-meta">#CMD-7835 • 12 Nov 2023</div>
+                                </div>
+                                <div class="order-status status-shipping">En livraison</div>
+                            </div>
+                            
+                            <div class="order-item">
+                                <div class="order-image">
+                                    <i class="fas fa-tshirt"></i>
+                                </div>
+                                <div class="order-details">
+                                    <div class="order-name">Pull Cachemire</div>
+                                    <div class="order-meta">#CMD-7821 • 10 Nov 2023</div>
+                                </div>
+                                <div class="order-status status-pending">En traitement</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wishlist -->
+                    <div class="card" style="margin-top: 2rem;">
+                        <div class="card-header">
+                            <h3>Ma Liste de Souhaits</h3>
+                            <a href="#" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">Voir tout</a>
+                        </div>
+                        <div class="card-content">
+                            <div class="wishlist-grid">
+                                <div class="wishlist-item">
+                                    <div class="wishlist-image">
+                                        <i class="fas fa-headphones"></i>
+                                    </div>
+                                    <div class="wishlist-content">
+                                        <div class="wishlist-name">Casque Audio Pro</div>
+                                        <div class="wishlist-price">249€</div>
+                                        <div class="wishlist-actions">
+                                            <button class="btn btn-primary">Acheter</button>
+                                            <button class="btn btn-outline">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="wishlist-item">
+                                    <div class="wishlist-image">
+                                        <i class="fas fa-laptop"></i>
+                                    </div>
+                                    <div class="wishlist-content">
+                                        <div class="wishlist-name">MacBook Pro</div>
+                                        <div class="wishlist-price">2,299€</div>
+                                        <div class="wishlist-actions">
+                                            <button class="btn btn-primary">Acheter</button>
+                                            <button class="btn btn-outline">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="wishlist-item">
+                                    <div class="wishlist-image">
+                                        <i class="fas fa-camera"></i>
+                                    </div>
+                                    <div class="wishlist-content">
+                                        <div class="wishlist-name">Appareil Photo</div>
+                                        <div class="wishlist-price">899€</div>
+                                        <div class="wishlist-actions">
+                                            <button class="btn btn-primary">Acheter</button>
+                                            <button class="btn btn-outline">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="quick-actions">
+                    <button class="action-btn">
+                        <div class="action-icon">
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+                        <div class="action-text">
+                            <h4>Modifier le profil</h4>
+                            <p>Mettre à jour vos informations</p>
+                        </div>
+                    </button>
+                    
+                    <button class="action-btn">
+                        <div class="action-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="action-text">
+                            <h4>Mes adresses</h4>
+                            <p>Gérer vos adresses</p>
+                        </div>
+                    </button>
+                    
+                    <button class="action-btn">
+                        <div class="action-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="action-text">
+                            <h4>Sécurité</h4>
+                            <p>Changer mot de passe</p>
+                        </div>
+                    </button>
+                    
+                    <button class="action-btn">
+                        <div class="action-icon">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <div class="action-text">
+                            <h4>Mes coupons</h4>
+                            <p>Voir mes réductions</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Animation des cartes de statistiques
+        document.addEventListener('DOMContentLoaded', function() {
+            const statCards = document.querySelectorAll('.stat-card');
+            
+            statCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+
+            // Gestion des notifications
+            const notificationBell = document.querySelector('.notification-bell');
+            notificationBell.addEventListener('click', function() {
+                const badge = this.querySelector('.notification-badge');
+                if (badge) {
+                    badge.style.transform = 'scale(0)';
+                    setTimeout(() => {
+                        badge.remove();
+                    }, 300);
+                }
+            });
+
+            // Simulation de données en temps réel
+            function updateUserStats() {
+                // Cette fonction pourrait être connectée à une API en temps réel
+                console.log('Mise à jour des statistiques utilisateur...');
+            }
+
+            // Mettre à jour les stats toutes les 30 secondes
+            setInterval(updateUserStats, 30000);
+        });
+    </script>
+</body>
+</html>
