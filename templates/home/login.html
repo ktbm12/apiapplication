@@ -49,6 +49,7 @@
             width: 90%;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 15px;
         }
 
         .btn {
@@ -61,6 +62,7 @@
             cursor: pointer;
             font-weight: 600;
             transition: var(--transition);
+            white-space: nowrap;
         }
 
         .btn:hover {
@@ -104,11 +106,19 @@
         .top-bar .container {
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .top-bar a {
             color: white;
             margin-left: 15px;
+        }
+
+        .contact-info, .top-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .main-header {
@@ -119,6 +129,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .logo {
@@ -134,12 +146,12 @@
         .header-actions {
             display: flex;
             align-items: center;
+            gap: 15px;
         }
 
         .header-actions a {
-            margin-left: 20px;
-            font-size: 1.2rem;
             position: relative;
+            font-size: 1.2rem;
         }
 
         .cart-count {
@@ -165,6 +177,7 @@
         .nav-menu {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .nav-menu li {
@@ -177,10 +190,22 @@
             color: white;
             font-weight: 500;
             transition: var(--transition);
+            white-space: nowrap;
         }
 
         .nav-menu a:hover {
             background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Menu mobile */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 10px;
         }
 
         /* Section de connexion */
@@ -189,7 +214,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 60px 0;
+            padding: 40px 0;
         }
 
         .login-container {
@@ -275,6 +300,7 @@
             justify-content: center;
             margin-right: 15px;
             font-size: 0.9rem;
+            flex-shrink: 0;
         }
 
         /* Côté droit - Formulaire */
@@ -354,6 +380,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .remember-me {
@@ -442,6 +470,7 @@
             cursor: pointer;
             transition: var(--transition);
             font-weight: 500;
+            white-space: nowrap;
         }
 
         .social-btn:hover {
@@ -488,6 +517,7 @@
             align-items: center;
             color: var(--text-light);
             font-size: 0.9rem;
+            white-space: nowrap;
         }
 
         .security-feature i {
@@ -572,14 +602,25 @@
         }
 
         /* Responsive */
+        @media (max-width: 1200px) {
+            .login-container {
+                max-width: 900px;
+            }
+        }
+
         @media (max-width: 992px) {
             .login-container {
                 grid-template-columns: 1fr;
                 max-width: 500px;
+                min-height: auto;
             }
             
             .login-illustration {
                 display: none;
+            }
+            
+            .login-form-container {
+                padding: 40px 30px;
             }
         }
 
@@ -590,11 +631,24 @@
             }
             
             .nav-menu {
-                flex-wrap: wrap;
+                display: none;
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+                position: absolute;
+                right: 15px;
+                top: 15px;
             }
             
             .login-form-container {
-                padding: 40px 30px;
+                padding: 30px 20px;
             }
             
             .social-login {
@@ -606,6 +660,14 @@
                 align-items: flex-start;
                 gap: 15px;
             }
+            
+            .form-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .illustration-content h2 {
+                font-size: 1.8rem;
+            }
         }
 
         @media (max-width: 576px) {
@@ -615,14 +677,91 @@
                 text-align: center;
             }
             
+            .contact-info, .top-links {
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .top-bar a {
+                margin: 0 8px;
+            }
+            
             .form-header h1 {
-                font-size: 1.8rem;
+                font-size: 1.6rem;
             }
             
             .security-features {
                 flex-direction: column;
                 align-items: center;
                 gap: 15px;
+            }
+            
+            .btn-large {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            
+            .form-control {
+                padding: 12px 15px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-form-container {
+                padding: 25px 15px;
+            }
+            
+            .form-header {
+                margin-bottom: 30px;
+            }
+            
+            .form-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .form-header p {
+                font-size: 1rem;
+            }
+            
+            .feature-item {
+                font-size: 0.9rem;
+            }
+            
+            .security-feature {
+                font-size: 0.8rem;
+            }
+            
+            .header-actions {
+                gap: 10px;
+            }
+            
+            .header-actions a {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .social-btn {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .social-btn i {
+                margin-right: 5px;
             }
         }
 
@@ -640,6 +779,58 @@
 
         .fade-in-up {
             animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Menu déroulant amélioré pour mobile */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background: white;
+            min-width: 200px;
+            box-shadow: var(--shadow);
+            border-radius: 8px;
+            z-index: 1000;
+            top: 100%;
+            left: 0;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu li a {
+            color: var(--text-color);
+            padding: 12px 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .dropdown-menu li:last-child a {
+            border-bottom: none;
+        }
+
+        .dropdown-menu li a:hover {
+            background: #f8f9fa;
+            color: var(--primary-color);
+        }
+
+        /* Pour mobile, le menu déroulant s'affiche en cliquant */
+        @media (max-width: 768px) {
+            .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                background: rgba(255, 255, 255, 0.1);
+                display: none;
+            }
+            
+            .dropdown.active .dropdown-menu {
+                display: block;
+            }
+            
+            .dropdown-menu li a {
+                color: white;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                padding-left: 40px;
+            }
         }
     </style>
 </head>
@@ -679,6 +870,9 @@
         <!-- Navigation -->
         <nav>
             <div class="container">
+                <button class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <ul class="nav-menu">
                     <li><a href="index.html">Accueil</a></li>
                     <li class="dropdown">
@@ -880,6 +1074,29 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Menu mobile
+            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            mobileMenuToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                this.querySelector('i').classList.toggle('fa-bars');
+                this.querySelector('i').classList.toggle('fa-times');
+            });
+            
+            // Gestion des menus déroulants sur mobile
+            const dropdowns = document.querySelectorAll('.dropdown > a');
+            
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        const parent = this.parentElement;
+                        parent.classList.toggle('active');
+                    }
+                });
+            });
+            
             // Basculer la visibilité du mot de passe
             const togglePassword = document.getElementById('toggle-password');
             const passwordInput = document.getElementById('password');

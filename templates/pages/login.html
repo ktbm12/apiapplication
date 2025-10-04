@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Connexion | LuxeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Styles spécifiques à la page de connexion */
+    .login-section {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: calc(100vh - 200px);
+    }
+    
+    /* ... autres styles login ... */
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="login-section">
+    <div class="container">
+        <div class="login-container fade-in-up">
+            <!-- Formulaire de connexion -->
+            <div class="login-form-container">
+                <div class="form-header">
+                    <h1>Connexion</h1>
+                    <p>Accédez à votre compte LuxeShop</p>
+                </div>
+                <!-- ... formulaire de connexion ... -->
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Scripts spécifiques à la connexion
+    document.addEventListener('DOMContentLoaded', function() {
+        // Basculer la visibilité du mot de passe
+        const togglePassword = document.getElementById('toggle-password');
+        // ... code de toggle password ...
+        
+        // Validation du formulaire
+        const loginForm = document.getElementById('login-form');
+        // ... code de validation ...
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Plateforme e-learning professionnelle - Apprenez de nouvelles compétences avec des cours experts">
+    <title>LearnHub - Apprenez Partout, À Tout Moment</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Animations personnalisées */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+        
+        .float-slow {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Carousel styles */
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        .carousel-slide {
+            flex: 0 0 100%;
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #9333ea;
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7e22ce;
+        }
+        
+        /* Course card hover effect */
+        .course-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- ===== HEADER / NAVIGATION ===== -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center gap-2">
+                        <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-graduation-cap text-white text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold text-gray-900">LearnHub</span>
+                    </a>
+                </div>
+                
+                <!-- Navigation Desktop -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#courses" class="text-gray-700 hover:text-purple-600 font-medium transition">Cours</a>
+                    <a href="#categories" class="text-gray-700 hover:text-purple-600 font-medium transition">Catégories</a>
+                    <a href="#instructors" class="text-gray-700 hover:text-purple-600 font-medium transition">Instructeurs</a>
+                    <a href="#about" class="text-gray-700 hover:text-purple-600 font-medium transition">À propos</a>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex items-center gap-4">
+                    <button class="hidden md:inline-flex items-center px-4 py-2 text-gray-700 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-search mr-2"></i>
+                        Rechercher
+                    </button>
+                    <button class="px-4 py-2 text-purple-600 font-semibold hover:bg-purple-50 rounded-lg transition">
+                        Connexion
+                    </button>
+                    <button class="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition shadow-md">
+                        Inscription
+                    </button>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="hidden md:hidden pb-4">
+                <div class="flex flex-col gap-4">
+                    <a href="#courses" class="text-gray-700 hover:text-purple-600 font-medium">Cours</a>
+                    <a href="#categories" class="text-gray-700 hover:text-purple-600 font-medium">Catégories</a>
+                    <a href="#instructors" class="text-gray-700 hover:text-purple-600 font-medium">Instructeurs</a>
+                    <a href="#about" class="text-gray-700 hover:text-purple-600 font-medium">À propos</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section class="bg-white pt-12 pb-16 lg:pt-20 lg:pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                
+                <!-- Colonne Gauche -->
+                <div class="space-y-8 fade-in">
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-purple-50 rounded-full border border-purple-100">
+                        <i class="fas fa-star text-purple-600"></i>
+                        <span class="text-sm font-semibold text-purple-700">Plateforme #1 en e-learning</span>
+                    </div>
+
+                    <!-- Titre -->
+                    <div class="space-y-4">
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                            Libérez Votre Potentiel
+                        </h1>
+                        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+                            Apprenez 
+                            <span class="text-purple-600">Partout, À Tout Moment</span>
+                        </h2>
+                    </div>
+
+                    <!-- Description -->
+                    <p class="text-lg text-gray-600 leading-relaxed max-w-xl">
+                        Rejoignez des milliers d'apprenants qui maîtrisent de nouvelles compétences chaque jour. Commencez votre parcours avec des cours dirigés par des experts.
+                    </p>
+
+                    <!-- Barre de Recherche -->
+                    <div class="max-w-2xl">
+                        <div class="flex items-center bg-white border-2 border-gray-300 rounded-full shadow-sm hover:border-gray-400 focus-within:border-purple-600 focus-within:shadow-md transition-all duration-200">
+                            <input 
+                                type="text"
+                                placeholder="Que voulez-vous apprendre ?"
+                                class="flex-1 px-6 py-4 text-base text-gray-900 placeholder-gray-500 bg-transparent border-0 focus:outline-none rounded-l-full"
+                            />
+                            <button class="px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-r-full transition-colors duration-200 flex items-center gap-2">
+                                <i class="fas fa-search"></i>
+                                <span class="hidden sm:inline">Rechercher</span>
+                            </button>
+                        </div>
+
+                        <!-- Tags populaires -->
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="text-sm text-gray-500 font-medium">Populaire:</span>
+                            <button class="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
+                                Python
+                            </button>
+                            <button class="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
+                                Web Dev
+                            </button>
+                            <button class="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
+                                Design
+                            </button>
+                            <button class="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
+                                Business
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="flex flex-wrap gap-8 pt-4">
+                        <div>
+                            <div class="text-3xl font-bold text-gray-900">50K+</div>
+                            <div class="text-sm text-gray-600 mt-1">Étudiants Actifs</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-gray-900">500+</div>
+                            <div class="text-sm text-gray-600 mt-1">Cours Experts</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-gray-900">4.9★</div>
+                            <div class="text-sm text-gray-600 mt-1">Note Moyenne</div>
+                        </div>
+                    </div>
+
+                    <!-- Logos Partenaires -->
+                    <div class="pt-8 border-t border-gray-200">
+                        <p class="text-xs text-gray-500 font-medium uppercase tracking-wide mb-4">
+                            Approuvé par les leaders du secteur
+                        </p>
+                        <div class="flex items-center gap-6 flex-wrap opacity-50">
+                            <span class="text-2xl font-bold text-gray-600">Google</span>
+                            <span class="text-2xl font-bold text-gray-600">Microsoft</span>
+                            <span class="text-2xl font-bold text-gray-600">IBM</span>
+                            <span class="text-2xl font-bold text-gray-600">Amazon</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Colonne Droite - Image Hero -->
+                <div class="relative hidden lg:block slide-in-right">
+                    <!-- Image principale -->
+                    <div class="relative">
+                        <img 
+                            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80" 
+                            alt="Students Learning"
+                            class="w-full h-auto object-cover rounded-2xl shadow-2xl float-slow"
+                        />
+                    </div>
+
+                    <!-- Carte flottante 1 -->
+                    <div class="absolute top-12 -left-8 bg-white rounded-xl shadow-xl p-4 border border-gray-100 max-w-xs float-slow">
+                        <div class="flex items-start gap-3">
+                            <div class="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-code text-purple-600 text-xl"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-sm font-semibold text-gray-900 truncate">Python Avancé</h3>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star text-xs"></i>
+                                        <i class="fas fa-star text-xs"></i>
+                                        <i class="fas fa-star text-xs"></i>
+                                        <i class="fas fa-star text-xs"></i>
+                                        <i class="fas fa-star text-xs"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-600 font-medium">4.8</span>
+                                    <span class="text-xs text-gray-400">(2.5k)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carte flottante 2 -->
+                    <div class="absolute bottom-20 -right-8 bg-white rounded-xl shadow-xl p-4 border border-gray-100 max-w-xs float-slow" style="animation-delay: 1s;">
+                        <div class="flex items-start gap-3">
+                            <div class="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-palette text-orange-600 text-xl"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-sm font-semibold text-gray-900 truncate">UI/UX Design Pro</h3>
+                                <div class="flex items-center gap-1 mt-1">
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star text-xs"></i>
+                                        <i class="fas fa-star text-xs"></i>
+                                        <i class="fas fa-star text-xs"></i>
+                                        <i class="fas fa-star text-xs"></i>
+                                        <i class="fas fa-star text-xs"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-600 font-medium">4.9</span>
+                                    <span class="text-xs text-gray-400">(3.7k)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CATEGORIES SECTION ===== -->
+    <section id="categories" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                    Explorez Nos Catégories
+                </h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Trouvez le domaine qui vous passionne et commencez votre apprentissage dès aujourd'hui
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                <!-- Catégorie 1 -->
+                <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 text-center cursor-pointer group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-code text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Développement</h3>
+                    <p class="text-sm text-gray-500">250+ cours</p>
+                </div>
+
+                <!-- Catégorie 2 -->
+                <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 text-center cursor-pointer group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-500 rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-palette text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Design</h3>
+                    <p class="text-sm text-gray-500">180+ cours</p>
+                </div>
+
+                <!-- Catégorie 3 -->
+                <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 text-center cursor-pointer group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-chart-line text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Business</h3>
+                    <p class="text-sm text-gray-500">150+ cours</p>
+                </div>
+
+                <!-- Catégorie 4 -->
+                <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 text-center cursor-pointer group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-database text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Data Science</h3>
+                    <p class="text-sm text-gray-500">120+ cours</p>
+                </div>
+
+                <!-- Catégorie 5 -->
+                <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 text-center cursor-pointer group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-bullhorn text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Marketing</h3>
+                    <p class="text-sm text-gray-500">200+ cours</p>
+                </div>
+
+                <!-- Catégorie 6 -->
+                <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 text-center cursor-pointer group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-500 rounded-full mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-camera text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Photographie</h3>
+                    <p class="text-sm text-gray-500">90+ cours</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== COURS POPULAIRES ===== -->
+    <section id="courses" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center mb-12">
+                <div>
+                    <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                        Cours Les Plus Populaires
+                    </h2>
+                    <p class="text-lg text-gray-600">
+                        Découvrez les cours préférés de nos étudiants
+                    </p>
+                </div>
+                <button class="hidden md:inline-flex items-center px-6 py-3 text-purple-600 font-semibold hover:bg-purple-50 rounded-lg transition">
+                    Voir tout
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Course Card 1 -->
+                <div class="course-card bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=600&q=80" alt="Course" class="w-full h-48 object-cover"/>
+                        <span class="absolute top-4 right-4 px-3 py-1 bg-purple-600 text-white text-xs font-bold rounded-full">
+                            BESTSELLER
+                        </span>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+                                Développement
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">
+                            Python Complet : De Zéro à Expert
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Maîtrisez Python de A à Z avec des projets réels et des exercices pratiques
+                        </p>
+                        
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                            </div>
+                            <span class="text-sm font-semibold text-gray-900">4.9</span>
+                            <span class="text-sm text-gray-500">(2,458 avis)</span>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                <i class="fas fa-clock"></i>
+                                <span>42 heures</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                <i class="fas fa-users"></i>
+                                <span>12,458</span>
+                            </div>
+                            <div class="text-2xl font-bold text-purple-600">
+                                49€
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Card 2 -->
+                <div class="course-card bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&q=80" alt="Course" class="w-full h-48 object-cover"/>
+                        <span class="absolute top-4 right-4 px-3 py-1 bg-orange-500 text-white text-xs font-bold rounded-full">
+                            NOUVEAU
+                        </span>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 bg-pink-100 text-pink-700 text-xs font-semibold rounded-full">
+                                Design
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">
+                            UI/UX Design Masterclass 2025
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Créez des interfaces utilisateur magnifiques et intuitives avec Figma
+                        </p>
+                        
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                            </div>
+                            <span class="text-sm font-semibold text-gray-900">4.8</span>
+                            <span class="text-sm text-gray-500">(3,721 avis)</span>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                <i class="fas fa-clock"></i>
+                                <span>38 heures</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                <i class="fas fa-users"></i>
+                                <span>9,234</span>
+                            </div>
+                            <div class="text-2xl font-bold text-purple-600">
+                                59€
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Card 3 -->
+                <div class="course-card bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80" alt="Course" class="w-full h-48 object-cover"/>
+                        <span class="absolute top-4 right-4 px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-full">
+                            POPULAIRE
+                        </span>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">
+                                Business
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">
+                            Data Analytics & Business Intelligence
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Transformez les données en insights avec Excel, SQL et Power BI
+                        </p>
+                        
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star-half-alt text-sm"></i>
+                            </div>
+                            <span class="text-sm font-semibold text-gray-900">4.7</span>
+                            <span class="text-sm text-gray-500">(5,892 avis)</span>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                <i class="fas fa-clock"></i>
+                                <span>35 heures</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text
+-gray-600">
+                                <i class="fas fa-users"></i>
+                                <span>15,678</span>
+                            </div>
+                            <div class="text-2xl font-bold text-purple-600">
+                                69€
+
+                            </div>  
+                            

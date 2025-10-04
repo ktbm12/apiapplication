@@ -1,0 +1,420 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+    <div class="container">
+        <a href="index.html">Accueil</a>
+        <span>></span>
+        <span>Promotions</span>
+    </div>
+</div>
+<!-- Bannière Promotions -->
+<section class="promo-banner">
+    <div class="container">
+        <div class="banner-content">
+            <h1>Soldes d'Été</h1>
+            <p>Profitez de réductions exceptionnelles jusqu'à -70% sur une sélection de produits. Offre limitée dans le temps !</p>
+           
+            <div class="countdown">
+                <div class="countdown-item">
+                    <span class="countdown-number" id="days">12</span>
+                    <span class="countdown-label">Jours</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="hours">18</span>
+                    <span class="countdown-label">Heures</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="minutes">45</span>
+                    <span class="countdown-label">Minutes</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="seconds">22</span>
+                    <span class="countdown-label">Secondes</span>
+                </div>
+            </div>
+           
+            <a href="#promo-products" class="btn">Voir toutes les promotions</a>
+        </div>
+    </div>
+</section>
+<!-- Filtres Promotions -->
+<section class="promo-filters">
+    <div class="container">
+        <div class="filters-container">
+            <div class="filter-categories">
+                <button class="filter-btn active" data-category="all">Toutes les catégories</button>
+                <button class="filter-btn" data-category="femmes">Mode Femme</button>
+                <button class="filter-btn" data-category="hommes">Mode Homme</button>
+                <button class="filter-btn" data-category="electronique">Électronique</button>
+                <button class="filter-btn" data-category="maison">Maison & Déco</button>
+                <button class="filter-btn" data-category="beaute">Beauté</button>
+            </div>
+           
+            <div class="sort-options">
+                <span class="sort-label">Trier par:</span>
+                <select class="sort-select">
+                    <option value="popularite">Popularité</option>
+                    <option value="reduction">Plus grande réduction</option>
+                    <option value="prix-croissant">Prix croissant</option>
+                    <option value="prix-decroissant">Prix décroissant</option>
+                    <option value="nouveaute">Nouveautés</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Produits en promotion -->
+<section class="promo-products" id="promo-products">
+    <div class="container">
+        <div class="section-title">
+            <h2>Produits en Promotion</h2>
+            <p>Découvrez notre sélection de produits à prix réduits</p>
+        </div>
+       
+        <div class="products-grid">
+            <!-- Produit 1 -->
+            <div class="product-card" data-category="electronique">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Montre Connectée Premium">
+                    <div class="product-badge">Promo</div>
+                    <div class="discount-badge">-20%</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Électronique</div>
+                    <h3>Montre Connectée Premium</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="rating-count">(128)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">199,99 €</span>
+                            <span class="old-price">249,99 €</span>
+                            <span class="discount-percent">-20%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Produit 2 -->
+            <div class="product-card" data-category="hommes">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2012&q=80" alt="Chaussures de Sport">
+                    <div class="product-badge">Promo</div>
+                    <div class="discount-badge">-15%</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Chaussures Homme</div>
+                    <h3>Chaussures de Sport Running</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="rating-count">(95)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">76,49 €</span>
+                            <span class="old-price">89,99 €</span>
+                            <span class="discount-percent">-15%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Produit 3 -->
+            <div class="product-card" data-category="femmes">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Sac à Main">
+                    <div class="product-badge">Promo</div>
+                    <div class="discount-badge">-30%</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Accessoires Femme</div>
+                    <h3>Sac à Main Cuir Végan</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="rating-count">(42)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">55,99 €</span>
+                            <span class="old-price">79,99 €</span>
+                            <span class="discount-percent">-30%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Produit 4 -->
+            <div class="product-card" data-category="electronique">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1936&q=80" alt="Casque Audio">
+                    <div class="product-badge">Promo</div>
+                    <div class="discount-badge">-25%</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Électronique</div>
+                    <h3>Casque Audio Sans Fil</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="rating-count">(156)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">112,49 €</span>
+                            <span class="old-price">149,99 €</span>
+                            <span class="discount-percent">-25%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Produit 5 -->
+            <div class="product-card" data-category="maison">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1556906781-2a6a84876bb4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Lampadaire">
+                    <div class="product-badge">Nouveau</div>
+                    <div class="discount-badge">-40%</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Maison & Déco</div>
+                    <h3>Lampadaire Design Scandinave</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="rating-count">(37)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">89,99 €</span>
+                            <span class="old-price">149,99 €</span>
+                            <span class="discount-percent">-40%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Produit 6 -->
+            <div class="product-card" data-category="beaute">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1591369822096-ffd140ec948f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80" alt="Parfum">
+                    <div class="product-badge">Promo</div>
+                    <div class="discount-badge">-35%</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Beauté</div>
+                    <h3>Parfum Signature Homme</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="rating-count">(89)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">51,99 €</span>
+                            <span class="old-price">79,99 €</span>
+                            <span class="discount-percent">-35%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="#" class="btn">Voir plus de promotions</a>
+        </div>
+    </div>
+</section>
+<!-- Ventes Flash -->
+<section class="flash-sales">
+    <div class="container">
+        <div class="flash-header">
+            <div class="flash-title">
+                <h2>Ventes Flash</h2>
+                <p>Offres spéciales disponibles uniquement aujourd'hui !</p>
+            </div>
+            <div class="flash-countdown">
+                <div class="flash-countdown-item">
+                    <span class="flash-number" id="flash-hours">08</span>
+                    <span class="flash-label">Heures</span>
+                </div>
+                <div class="flash-countdown-item">
+                    <span class="flash-number" id="flash-minutes">45</span>
+                    <span class="flash-label">Minutes</span>
+                </div>
+                <div class="flash-countdown-item">
+                    <span class="flash-number" id="flash-seconds">22</span>
+                    <span class="flash-label">Secondes</span>
+                </div>
+            </div>
+        </div>
+       
+        <div class="products-grid">
+            <!-- Produit Flash 1 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Appareil Photo">
+                    <div class="product-badge">Flash</div>
+                    <div class="discount-badge">-50%</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Électronique</div>
+                    <h3>Appareil Photo Compact</h3>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">224,99 €</span>
+                            <span class="old-price">449,99 €</span>
+                            <span class="discount-percent">-50%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Produit Flash 2 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Jupe">
+                    <div class="product-badge">Flash</div>
+                    <div class="discount-badge">-60%</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Mode Femme</div>
+                    <h3>Jupe Midi Élégante</h3>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">19,99 €</span>
+                            <span class="old-price">49,99 €</span>
+                            <span class="discount-percent">-60%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Newsletter Promo -->
+<section class="newsletter-promo">
+    <div class="container">
+        <div class="newsletter-content">
+            <h2>Ne manquez aucune promotion !</h2>
+            <p>Inscrivez-vous à notre newsletter pour être informé en avant-première de nos offres spéciales et soldes.</p>
+           
+            <form class="newsletter-form">
+                <input type="email" placeholder="Votre adresse email" required>
+                <button type="submit">S'abonner</button>
+            </form>
+           
+            <p style="font-size: 0.85rem; margin-top: 15px; opacity: 0.7;">
+                <i class="fas fa-lock"></i> Vos données sont protégées et vous pouvez vous désabonner à tout moment
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

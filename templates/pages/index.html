@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Collection Été 2023</h1>
+            <p>Découvrez notre nouvelle collection de vêtements et accessoires tendance pour un été plein de style</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn">Découvrir</a>
+                <a href="#" class="btn btn-outline">Promotions</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Catégories -->
+<section class="categories">
+    <div class="container">
+        <div class="section-title">
+            <h2>Catégories Populaires</h2>
+        </div>
+        
+        <div class="category-grid">
+            <a href="#" class="category-card">
+                <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80" alt="Mode Femme">
+                <h3>Mode Femme</h3>
+            </a>
+            
+            <a href="#" class="category-card">
+                <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Mode Homme">
+                <h3>Mode Homme</h3>
+            </a>
+            
+            <a href="#" class="category-card">
+                <img src="https://images.unsplash.com/photo-1584302179602-e4819bb92daa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Électronique">
+                <h3>Électronique</h3>
+            </a>
+            
+            <a href="#" class="category-card">
+                <img src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Maison & Déco">
+                <h3>Maison & Déco</h3>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Produits populaires -->
+<section class="featured-products">
+    <div class="container">
+        <div class="section-title">
+            <h2>Produits Populaires</h2>
+        </div>
+        
+        <div class="product-grid">
+            <!-- Produit 1 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Montre Connectée">
+                </div>
+                <div class="product-info">
+                    <h3>Montre Connectée Premium</h3>
+                    <p>Suivi d'activité, notifications, étanche</p>
+                    <div class="product-price">
+                        <div class="price">
+                            €199,99 <span class="old-price">€249,99</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 2 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2012&q=80" alt="Chaussures de Sport">
+                </div>
+                <div class="product-info">
+                    <h3>Chaussures de Sport Running</h3>
+                    <p>Confort maximal, légères et respirantes</p>
+                    <div class="product-price">
+                        <div class="price">€89,99</div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 3 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Appareil Photo">
+                </div>
+                <div class="product-info">
+                    <h3>Appareil Photo Compact</h3>
+                    <p>4K, objectif 20x, stabilisation d'image</p>
+                    <div class="product-price">
+                        <div class="price">€449,99</div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 4 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Sac à Main">
+                </div>
+                <div class="product-info">
+                    <h3>Sac à Main Cuir Végan</h3>
+                    <p>Design élégant, compartiments multiples</p>
+                    <div class="product-price">
+                        <div class="price">
+                            €79,99 <span class="old-price">€99,99</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="#" class="btn">Voir tous les produits</a>
+        </div>
+    </div>
+</section>
+
+<!-- Promotions -->
+<section class="promotions">
+    <div class="container">
+        <div class="promo-content">
+            <div class="promo-text">
+                <h2>Soldes d'Été</h2>
+                <p>Profitez de réductions exceptionnelles jusqu'à -50% sur une sélection de produits. Offre valable jusqu'au 31 juillet.</p>
+                
+                <div class="countdown">
+                    <div class="countdown-item">
+                        <div class="countdown-number">12</div>
+                        <div class="countdown-label">Jours</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number">18</div>
+                        <div class="countdown-label">Heures</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number">45</div>
+                        <div class="countdown-label">Minutes</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number">22</div>
+                        <div class="countdown-label">Secondes</div>
+                    </div>
+                </div>
+                
+                <a href="#" class="btn">Profiter des soldes</a>
+            </div>
+            
+            <div class="promo-image">
+                <img src="https://images.unsplash.com/photo-1607082352121-fa243f3dde32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Promotions">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter -->
+<section class="newsletter">
+    <div class="container">
+        <h2>Inscrivez-vous à notre newsletter</h2>
+        <p>Recevez en exclusivité nos offres promotionnelles, nouveautés et conseils mode.</p>
+        
+        <form class="newsletter-form">
+            <input type="email" placeholder="Votre adresse email" required>
+            <button type="submit">S'abonner</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
