@@ -1,0 +1,401 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+    <div class="container">
+        <a href="index.html">Accueil</a>
+        <span>></span>
+        <span>Tous les articles</span>
+    </div>
+</div>
+
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <h1>Tous les Articles</h1>
+        <p>Découvrez notre collection complète de produits soigneusement sélectionnés pour répondre à tous vos besoins</p>
+    </div>
+</section>
+
+<!-- Filtres et tri -->
+<section class="filters-section">
+    <div class="container">
+        <div class="filters-container">
+            <div class="filter-group">
+                <span class="filter-label">Filtrer par:</span>
+                <select class="filter-select">
+                    <option value="">Catégorie</option>
+                    <option value="femmes">Femmes</option>
+                    <option value="hommes">Hommes</option>
+                    <option value="enfants">Enfants</option>
+                    <option value="electronique">Électronique</option>
+                    <option value="maison">Maison</option>
+                </select>
+                <select class="filter-select">
+                    <option value="">Prix</option>
+                    <option value="0-50">Moins de 50€</option>
+                    <option value="50-100">50€ - 100€</option>
+                    <option value="100-200">100€ - 200€</option>
+                    <option value="200+">Plus de 200€</option>
+                </select>
+                <select class="filter-select">
+                    <option value="">Marque</option>
+                    <option value="brand1">Brand A</option>
+                    <option value="brand2">Brand B</option>
+                    <option value="brand3">Brand C</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <span class="filter-label">Trier par:</span>
+                <select class="filter-select">
+                    <option value="popularite">Popularité</option>
+                    <option value="nouveaute">Nouveautés</option>
+                    <option value="prix-croissant">Prix croissant</option>
+                    <option value="prix-decroissant">Prix décroissant</option>
+                    <option value="note">Meilleures notes</option>
+                </select>
+                
+                <div class="view-options">
+                    <div class="view-btn active" data-view="grid">
+                        <i class="fas fa-th"></i>
+                    </div>
+                    <div class="view-btn" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Produits -->
+<section class="products-section">
+    <div class="container">
+        <div class="products-grid" id="products-container">
+            <!-- Produit 1 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Montre Connectée">
+                    <div class="product-badge">Promo</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Électronique</div>
+                    <h3>Montre Connectée Premium</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="rating-count">(128)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price">
+                            €199,99 <span class="old-price">€249,99</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            Ajouter
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 2 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2012&q=80" alt="Chaussures de Sport">
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Chaussures</div>
+                    <h3>Chaussures de Sport Running</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="rating-count">(95)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price">€89,99</div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            Ajouter
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 3 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Appareil Photo">
+                    <div class="product-badge">Nouveau</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Électronique</div>
+                    <h3>Appareil Photo Compact</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="rating-count">(64)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price">€449,99</div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            Ajouter
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 4 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Sac à Main">
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Accessoires</div>
+                    <h3>Sac à Main Cuir Végan</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="rating-count">(42)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price">
+                            €79,99 <span class="old-price">€99,99</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            Ajouter
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 5 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Jupe">
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Vêtements Femmes</div>
+                    <h3>Jupe Midi Élégante</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="rating-count">(78)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price">€49,99</div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            Ajouter
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 6 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1936&q=80" alt="Casque Audio">
+                    <div class="product-badge">Promo</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Électronique</div>
+                    <h3>Casque Audio Sans Fil</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="rating-count">(156)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price">
+                            €129,99 <span class="old-price">€159,99</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            Ajouter
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 7 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1591369822096-ffd140ec948f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80" alt="Parfum">
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Beauté</div>
+                    <h3>Parfum Signature Homme</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="rating-count">(89)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price">€79,99</div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            Ajouter
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Produit 8 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1556906781-2a6a84876bb4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Lampadaire">
+                    <div class="product-badge">Nouveau</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Maison</div>
+                    <h3>Lampadaire Design Scandinave</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="rating-count">(37)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price">€149,99</div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            Ajouter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination">
+            <ul class="pagination-list">
+                <li class="pagination-item">
+                    <a href="#"><i class="fas fa-chevron-left"></i></a>
+                </li>
+                <li class="pagination-item active">
+                    <a href="#">1</a>
+                </li>
+                <li class="pagination-item">
+                    <a href="#">2</a>
+                </li>
+                <li class="pagination-item">
+                    <a href="#">3</a>
+                </li>
+                <li class="pagination-item">
+                    <a href="#">4</a>
+                </li>
+                <li class="pagination-item">
+                    <a href="#"><i class="fas fa-chevron-right"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+{% endblock %}
