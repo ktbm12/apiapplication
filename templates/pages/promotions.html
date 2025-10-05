@@ -1,264 +1,419 @@
 {% extends 'base.html' %}
 
-{% block title %}Paiement Sécurisé | LuxeShop{% endblock %}
-
 {% block content %}
 <!-- Breadcrumb -->
 <div class="breadcrumb">
     <div class="container">
         <a href="index.html">Accueil</a>
         <span>></span>
-        <a href="panier.html">Panier</a>
-        <span>></span>
-        <span>Paiement</span>
+        <span>Promotions</span>
     </div>
 </div>
-
-<!-- Processus de commande -->
-<section class="checkout-steps">
+<!-- Bannière Promotions -->
+<section class="promo-banner">
     <div class="container">
-        <div class="steps-container">
-            <div class="step completed">
-                <div class="step-number">1</div>
-                <div class="step-text">Panier</div>
+        <div class="banner-content">
+            <h1>Soldes d'Été</h1>
+            <p>Profitez de réductions exceptionnelles jusqu'à -70% sur une sélection de produits. Offre limitée dans le temps !</p>
+           
+            <div class="countdown">
+                <div class="countdown-item">
+                    <span class="countdown-number" id="days">12</span>
+                    <span class="countdown-label">Jours</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="hours">18</span>
+                    <span class="countdown-label">Heures</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="minutes">45</span>
+                    <span class="countdown-label">Minutes</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="seconds">22</span>
+                    <span class="countdown-label">Secondes</span>
+                </div>
             </div>
-            <div class="step-connector"></div>
-            <div class="step completed">
-                <div class="step-number">2</div>
-                <div class="step-text">Livraison</div>
+           
+            <a href="#promo-products" class="btn">Voir toutes les promotions</a>
+        </div>
+    </div>
+</section>
+<!-- Filtres Promotions -->
+<section class="promo-filters">
+    <div class="container">
+        <div class="filters-container">
+            <div class="filter-categories">
+                <button class="filter-btn active" data-category="all">Toutes les catégories</button>
+                <button class="filter-btn" data-category="femmes">Mode Femme</button>
+                <button class="filter-btn" data-category="hommes">Mode Homme</button>
+                <button class="filter-btn" data-category="electronique">Électronique</button>
+                <button class="filter-btn" data-category="maison">Maison & Déco</button>
+                <button class="filter-btn" data-category="beaute">Beauté</button>
             </div>
-            <div class="step-connector"></div>
-            <div class="step active">
-                <div class="step-number">3</div>
-                <div class="step-text">Paiement</div>
-            </div>
-            <div class="step-connector"></div>
-            <div class="step">
-                <div class="step-number">4</div>
-                <div class="step-text">Confirmation</div>
+           
+            <div class="sort-options">
+                <span class="sort-label">Trier par:</span>
+                <select class="sort-select">
+                    <option value="popularite">Popularité</option>
+                    <option value="reduction">Plus grande réduction</option>
+                    <option value="prix-croissant">Prix croissant</option>
+                    <option value="prix-decroissant">Prix décroissant</option>
+                    <option value="nouveaute">Nouveautés</option>
+                </select>
             </div>
         </div>
     </div>
 </section>
-
-<!-- Section Paiement -->
-<section class="checkout-section">
+<!-- Produits en promotion -->
+<section class="promo-products" id="promo-products">
     <div class="container">
-        <div class="checkout-container">
-            <!-- Formulaire de paiement -->
-            <div class="payment-form-container">
-                <div class="section-title">
-                    <h2>Méthode de Paiement</h2>
-                </div>
-                
-                <div class="payment-methods">
-                    <div class="payment-option selected" data-method="card">
-                        <div class="payment-radio">
-                            <input type="radio" id="card" name="payment-method" checked>
+        <div class="section-title">
+            <h2>Produits en Promotion</h2>
+            <p>Découvrez notre sélection de produits à prix réduits</p>
+        </div>
+       
+        <div class="products-grid">
+            <!-- Produit 1 -->
+            <div class="product-card" data-category="electronique">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Montre Connectée Premium">
+                    <div class="product-badge">Promo</div>
+                    <div class="discount-badge">-20%</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
                         </div>
-                        <div class="payment-icon">
-                            <i class="far fa-credit-card"></i>
-                        </div>
-                        <div class="payment-details">
-                            <h3>Carte de crédit/débit</h3>
-                            <p>Paiement sécurisé par carte bancaire</p>
-                        </div>
-                    </div>
-                    
-                    <div class="payment-option" data-method="paypal">
-                        <div class="payment-radio">
-                            <input type="radio" id="paypal" name="payment-method">
-                        </div>
-                        <div class="payment-icon">
-                            <i class="fab fa-paypal"></i>
-                        </div>
-                        <div class="payment-details">
-                            <h3>PayPal</h3>
-                            <p>Paiement rapide et sécurisé</p>
-                        </div>
-                    </div>
-                    
-                    <div class="payment-option" data-method="applepay">
-                        <div class="payment-radio">
-                            <input type="radio" id="applepay" name="payment-method">
-                        </div>
-                        <div class="payment-icon">
-                            <i class="fab fa-apple-pay"></i>
-                        </div>
-                        <div class="payment-details">
-                            <h3>Apple Pay</h3>
-                            <p>Paiement avec votre appareil Apple</p>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
                         </div>
                     </div>
                 </div>
-                
-                <form id="payment-form">
-                    <!-- Carte de crédit -->
-                    <div class="payment-method-content" id="card-content">
-                        <div class="form-group">
-                            <label for="card-number" class="form-label">Numéro de carte *</label>
-                            <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456" required>
+                <div class="product-info">
+                    <div class="product-category">Électronique</div>
+                    <h3>Montre Connectée Premium</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
                         </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="expiry-date" class="form-label">Date d'expiration *</label>
-                                <input type="text" id="expiry-date" class="form-control" placeholder="MM/AA" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="cvv" class="form-label">CVV *</label>
-                                <input type="text" id="cvv" class="form-control" placeholder="123" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="cardholder" class="form-label">Nom du titulaire *</label>
-                            <input type="text" id="cardholder" class="form-control" placeholder="Jean DUPONT" required>
-                        </div>
+                        <div class="rating-count">(128)</div>
                     </div>
-                    
-                    <!-- PayPal (caché par défaut) -->
-                    <div class="payment-method-content" id="paypal-content" style="display: none;">
-                        <div class="form-group">
-                            <p>Vous serez redirigé vers PayPal pour compléter votre paiement de manière sécurisée.</p>
-                            <button type="button" class="btn btn-outline" style="width: 100%; margin-top: 15px;">
-                                <i class="fab fa-paypal"></i> Payer avec PayPal
-                            </button>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">199,99 €</span>
+                            <span class="old-price">249,99 €</span>
+                            <span class="discount-percent">-20%</span>
                         </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
                     </div>
-                    
-                    <!-- Apple Pay (caché par défaut) -->
-                    <div class="payment-method-content" id="applepay-content" style="display: none;">
-                        <div class="form-group">
-                            <p>Utilisez Apple Pay pour un paiement rapide et sécurisé.</p>
-                            <button type="button" class="btn btn-outline" style="width: 100%; margin-top: 15px;">
-                                <i class="fab fa-apple-pay"></i> Payer avec Apple Pay
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Adresse de facturation</label>
-                        <div style="background-color: #f9f9f9; padding: 15px; border-radius: 4px;">
-                            <p><strong>Jean Dupont</strong></p>
-                            <p>15 Rue de la République</p>
-                            <p>75001 Paris, France</p>
-                            <a href="#" style="color: var(--accent-color); font-size: 0.9rem;">Modifier l'adresse</a>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-checkbox" style="display: flex; align-items: flex-start;">
-                            <input type="checkbox" style="margin-right: 10px; margin-top: 3px;" required>
-                            <span>J'accepte les <a href="#" style="color: var(--accent-color);">conditions générales de vente</a> et la <a href="#" style="color: var(--accent-color);">politique de confidentialité</a> *</span>
-                        </label>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-large">
-                        <i class="fas fa-lock"></i> Payer maintenant - 387,97 €
-                    </button>
-                </form>
+                </div>
             </div>
-            
-            <!-- Récapitulatif de commande -->
-            <div class="order-summary">
-                <div class="section-title">
-                    <h2>Récapitulatif</h2>
-                </div>
-                
-                <div class="order-items">
-                    <div class="order-item">
-                        <div class="item-image">
-                            <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Montre Connectée Premium">
+           
+            <!-- Produit 2 -->
+            <div class="product-card" data-category="hommes">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2012&q=80" alt="Chaussures de Sport">
+                    <div class="product-badge">Promo</div>
+                    <div class="discount-badge">-15%</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
                         </div>
-                        <div class="item-details">
-                            <h3>Montre Connectée Premium</h3>
-                            <div class="item-meta">Noir, 44mm</div>
-                            <div class="item-price">199,99 €</div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
                         </div>
-                        <div class="item-quantity">1</div>
-                    </div>
-                    
-                    <div class="order-item">
-                        <div class="item-image">
-                            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2012&q=80" alt="Chaussures de Sport">
-                        </div>
-                        <div class="item-details">
-                            <h3>Chaussures de Sport Running</h3>
-                            <div class="item-meta">Noir, 42</div>
-                            <div class="item-price">89,99 €</div>
-                        </div>
-                        <div class="item-quantity">1</div>
                     </div>
                 </div>
-                
-                <div class="order-totals">
-                    <div class="total-row">
-                        <span>Sous-total</span>
-                        <span>289,98 €</span>
+                <div class="product-info">
+                    <div class="product-category">Chaussures Homme</div>
+                    <h3>Chaussures de Sport Running</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="rating-count">(95)</div>
                     </div>
-                    <div class="total-row">
-                        <span>Livraison</span>
-                        <span>4,99 €</span>
-                    </div>
-                    <div class="total-row">
-                        <span>Taxes</span>
-                        <span>57,99 €</span>
-                    </div>
-                    <div class="total-row">
-                        <span>Remise</span>
-                        <span style="color: #27ae60;">-35,00 €</span>
-                    </div>
-                    <div class="total-row final">
-                        <span>Total</span>
-                        <span>317,96 €</span>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">76,49 €</span>
+                            <span class="old-price">89,99 €</span>
+                            <span class="discount-percent">-15%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
                     </div>
                 </div>
-                
-                <div class="security-badge">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>Paiement 100% sécurisé - SSL加密</span>
+            </div>
+           
+            <!-- Produit 3 -->
+            <div class="product-card" data-category="femmes">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Sac à Main">
+                    <div class="product-badge">Promo</div>
+                    <div class="discount-badge">-30%</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Accessoires Femme</div>
+                    <h3>Sac à Main Cuir Végan</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="rating-count">(42)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">55,99 €</span>
+                            <span class="old-price">79,99 €</span>
+                            <span class="discount-percent">-30%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Produit 4 -->
+            <div class="product-card" data-category="electronique">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1936&q=80" alt="Casque Audio">
+                    <div class="product-badge">Promo</div>
+                    <div class="discount-badge">-25%</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Électronique</div>
+                    <h3>Casque Audio Sans Fil</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="rating-count">(156)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">112,49 €</span>
+                            <span class="old-price">149,99 €</span>
+                            <span class="discount-percent">-25%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Produit 5 -->
+            <div class="product-card" data-category="maison">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1556906781-2a6a84876bb4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Lampadaire">
+                    <div class="product-badge">Nouveau</div>
+                    <div class="discount-badge">-40%</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Maison & Déco</div>
+                    <h3>Lampadaire Design Scandinave</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="rating-count">(37)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">89,99 €</span>
+                            <span class="old-price">149,99 €</span>
+                            <span class="discount-percent">-40%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Produit 6 -->
+            <div class="product-card" data-category="beaute">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1591369822096-ffd140ec948f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80" alt="Parfum">
+                    <div class="product-badge">Promo</div>
+                    <div class="discount-badge">-35%</div>
+                    <div class="product-actions">
+                        <div class="action-btn">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Beauté</div>
+                    <h3>Parfum Signature Homme</h3>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="rating-count">(89)</div>
+                    </div>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">51,99 €</span>
+                            <span class="old-price">79,99 €</span>
+                            <span class="discount-percent">-35%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="#" class="btn">Voir plus de promotions</a>
+        </div>
+    </div>
+</section>
+<!-- Ventes Flash -->
+<section class="flash-sales">
+    <div class="container">
+        <div class="flash-header">
+            <div class="flash-title">
+                <h2>Ventes Flash</h2>
+                <p>Offres spéciales disponibles uniquement aujourd'hui !</p>
+            </div>
+            <div class="flash-countdown">
+                <div class="flash-countdown-item">
+                    <span class="flash-number" id="flash-hours">08</span>
+                    <span class="flash-label">Heures</span>
+                </div>
+                <div class="flash-countdown-item">
+                    <span class="flash-number" id="flash-minutes">45</span>
+                    <span class="flash-label">Minutes</span>
+                </div>
+                <div class="flash-countdown-item">
+                    <span class="flash-number" id="flash-seconds">22</span>
+                    <span class="flash-label">Secondes</span>
+                </div>
+            </div>
+        </div>
+       
+        <div class="products-grid">
+            <!-- Produit Flash 1 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Appareil Photo">
+                    <div class="product-badge">Flash</div>
+                    <div class="discount-badge">-50%</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Électronique</div>
+                    <h3>Appareil Photo Compact</h3>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">224,99 €</span>
+                            <span class="old-price">449,99 €</span>
+                            <span class="discount-percent">-50%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Produit Flash 2 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Jupe">
+                    <div class="product-badge">Flash</div>
+                    <div class="discount-badge">-60%</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Mode Femme</div>
+                    <h3>Jupe Midi Élégante</h3>
+                    <div class="product-price">
+                        <div class="price-container">
+                            <span class="current-price">19,99 €</span>
+                            <span class="old-price">49,99 €</span>
+                            <span class="discount-percent">-60%</span>
+                        </div>
+                        <button class="add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
-<!-- Section Sécurité -->
-<section class="security-section">
+<!-- Newsletter Promo -->
+<section class="newsletter-promo">
     <div class="container">
-        <div class="security-features">
-            <div class="security-feature">
-                <div class="security-icon">
-                    <i class="fas fa-lock"></i>
-                </div>
-                <h3>Paiement Sécurisé</h3>
-                <p>Toutes vos transactions sont cryptées et protégées</p>
-            </div>
-            
-            <div class="security-feature">
-                <div class="security-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3>Protection des Données</h3>
-                <p>Vos informations personnelles sont confidentielles</p>
-            </div>
-            
-            <div class="security-feature">
-                <div class="security-icon">
-                    <i class="fas fa-truck"></i>
-                </div>
-                <h3>Livraison Garantie</h3>
-                <p>Recevez votre commande ou remboursé</p>
-            </div>
-            
-            <div class="security-feature">
-                <div class="security-icon">
-                    <i class="fas fa-headset"></i>
-                </div>
-                <h3>Support 7j/7</h3>
-                <p>Notre équipe est là pour vous aider</p>
-            </div>
+        <div class="newsletter-content">
+            <h2>Ne manquez aucune promotion !</h2>
+            <p>Inscrivez-vous à notre newsletter pour être informé en avant-première de nos offres spéciales et soldes.</p>
+           
+            <form class="newsletter-form">
+                <input type="email" placeholder="Votre adresse email" required>
+                <button type="submit">S'abonner</button>
+            </form>
+           
+            <p style="font-size: 0.85rem; margin-top: 15px; opacity: 0.7;">
+                <i class="fas fa-lock"></i> Vos données sont protégées et vous pouvez vous désabonner à tout moment
+            </p>
         </div>
     </div>
 </section>
