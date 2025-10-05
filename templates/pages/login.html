@@ -901,193 +901,104 @@
     <!-- Footer -->
    
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Menu mobile
-            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-            const navMenu = document.querySelector('.nav-menu');
-            
-            mobileMenuToggle.addEventListener('click', function() {
-                navMenu.classList.toggle('active');
-                this.querySelector('i').classList.toggle('fa-bars');
-                this.querySelector('i').classList.toggle('fa-times');
+ <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('login-form');
+
+    loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const submitBtn = loginForm.querySelector('button[type="submit"]');
+
+        if (!email || !password) {
+            showMessage('Veuillez remplir tous les champs obligatoires.', 'error');
+            return;
+        }
+
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connexion...';
+        submitBtn.disabled = true;
+
+        try {
+            // 🔥 Appel réel à ton API de login
+            const response = await fetch('http://127.0.0.1:9000/api/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,   // ou "username" selon ton API
+                    password: password
+                })
             });
-            
-            // Gestion des menus déroulants sur mobile
-            const dropdowns = document.querySelectorAll('.dropdown > a');
-            
-            dropdowns.forEach(dropdown => {
-                dropdown.addEventListener('click', function(e) {
-                    if (window.innerWidth <= 768) {
-                        e.preventDefault();
-                        const parent = this.parentElement;
-                        parent.classList.toggle('active');
-                    }
-                });
-            });
-            
-            // Basculer la visibilité du mot de passe
-            const togglePassword = document.getElementById('toggle-password');
-            const passwordInput = document.getElementById('password');
-            
-            togglePassword.addEventListener('click', function() {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                
-                // Changer l'icône
-                const icon = this.querySelector('i');
-                if (type === 'password') {
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
-                } else {
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
+
+            const data = await response.json();
+            console.log("Réponse API :", data);
+
+            if (response.ok) {
+                // ✅ Connexion réussie
+                showMessage('Connexion réussie ! Redirection...', 'success');
+
+                // Sauvegarde du token dans localStorage
+                if (data.token) {
+                    localStorage.setItem('authToken', data.token);
                 }
-            });
-            
-            // Validation du formulaire
-            const loginForm = document.getElementById('login-form');
-            
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const rememberMe = document.getElementById('remember-me').checked;
-                
-                // Validation basique
-                if (!email || !password) {
-                    showMessage('Veuillez remplir tous les champs obligatoires.', 'error');
-                    return;
-                }
-                
-                if (!isValidEmail(email)) {
-                    showMessage('Veuillez saisir une adresse email valide.', 'error');
-                    return;
-                }
-                
-                // Simulation de connexion
-                const submitBtn = loginForm.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connexion...';
-                submitBtn.disabled = true;
-                
-                // Simulation d'un délai de traitement
+
+                // Redirection après succès
                 setTimeout(() => {
-                    // En production, vous enverriez les données au serveur ici
-                    console.log('Tentative de connexion:', { email, password, rememberMe });
-                    
-                    // Simulation de succès
-                    showMessage('Connexion réussie! Redirection...', 'success');
-                    
-                    // Redirection après un délai
-                    setTimeout(() => {
-                        window.location.href = 'mon-compte.html';
-                    }, 1500);
-                    
-                }, 2000);
-            });
-            
-            // Connexion sociale
-            const socialButtons = document.querySelectorAll('.social-btn');
-            
-            socialButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const provider = this.classList.contains('google') ? 'Google' : 'Facebook';
-                    showMessage(`Connexion avec ${provider} en cours...`, 'info');
-                    
-                    // Ici, vous intégreriez l'authentification sociale réelle
-                    setTimeout(() => {
-                        showMessage(`Fonctionnalité ${provider} à implémenter`, 'info');
-                    }, 1000);
-                });
-            });
-            
-            // Fonction de validation d'email
-            function isValidEmail(email) {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return emailRegex.test(email);
+                    window.location.href = '/mon-compte/';
+                }, 1500);
+            } else {
+                // ⚠️ Erreur d’identifiants
+                let errorMessage = data.detail || "Identifiants incorrects.";
+                showMessage(errorMessage, 'error');
             }
-            
-            // Fonction d'affichage des messages
-            function showMessage(message, type) {
-                // Supprimer les messages existants
-                const existingMessage = document.querySelector('.message-alert');
-                if (existingMessage) {
-                    existingMessage.remove();
-                }
-                
-                // Créer le nouveau message
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message-alert message-${type}`;
-                messageDiv.textContent = message;
-                
-                // Styles pour le message
-                messageDiv.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    padding: 15px 20px;
-                    border-radius: 8px;
-                    color: white;
-                    font-weight: 500;
-                    z-index: 10000;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                    animation: slideInRight 0.3s ease-out;
-                    max-width: 300px;
-                `;
-                
-                // Couleur selon le type
-                if (type === 'error') {
-                    messageDiv.style.backgroundColor = '#e74c3c';
-                } else if (type === 'success') {
-                    messageDiv.style.backgroundColor = '#27ae60';
-                } else {
-                    messageDiv.style.backgroundColor = '#3498db';
-                }
-                
-                document.body.appendChild(messageDiv);
-                
-                // Supprimer le message après 5 secondes
-                setTimeout(() => {
-                    if (messageDiv.parentNode) {
-                        messageDiv.style.animation = 'slideOutRight 0.3s ease-in';
-                        setTimeout(() => {
-                            if (messageDiv.parentNode) {
-                                messageDiv.remove();
-                            }
-                        }, 300);
-                    }
-                }, 5000);
-            }
-            
-            // Ajouter les keyframes d'animation pour les messages
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes slideInRight {
-                    from {
-                        transform: translateX(100%);
-                        opacity: 0;
-                    }
-                    to {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
-                }
-                
-                @keyframes slideOutRight {
-                    from {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
-                    to {
-                        transform: translateX(100%);
-                        opacity: 0;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-        });
-    </script>
+
+        } catch (error) {
+            console.error("Erreur de connexion :", error);
+            showMessage('Erreur de connexion au serveur.', 'error');
+        } finally {
+            submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Fonction d'affichage des messages
+    function showMessage(message, type) {
+        const existingMessage = document.querySelector('.message-alert');
+        if (existingMessage) existingMessage.remove();
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message-alert message-${type}`;
+        messageDiv.textContent = message;
+
+        messageDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideInRight 0.3s ease-out;
+            max-width: 300px;
+        `;
+
+        if (type === 'error') messageDiv.style.backgroundColor = '#e74c3c';
+        else if (type === 'success') messageDiv.style.backgroundColor = '#27ae60';
+        else messageDiv.style.backgroundColor = '#3498db';
+
+        document.body.appendChild(messageDiv);
+
+        setTimeout(() => {
+            if (messageDiv.parentNode) messageDiv.remove();
+        }, 4000);
+    }
+});
+</script>
+
+    
 {% endblock %}
