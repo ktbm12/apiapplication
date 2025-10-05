@@ -1,8 +1,10 @@
 from django.shortcuts import render
-
 # Create your views here.
 from django.shortcuts import render
-
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status, permissions
+from .serializers import LogoutSerializer
 def home(request):
     """
     Vue minimale pour afficher la page d'accueil.
@@ -74,14 +76,19 @@ class ProfileView(generics.RetrieveAPIView):
         return self.request.user
 
 
-class LogoutView(generics.GenericAPIView):
+class LogoutView(APIView):
+    """
+    Permet à un utilisateur connecté de se déconnecter (invalidation du token JWT).
+    """
+    serializer_class = LogoutSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        try:
-            refresh_token = request.data["refresh"]
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return Response({"detail": "Déconnexion réussie."})
-        except Exception:
-            return Response({"detail": "Token invalide ou déjà expiré."}, status=400)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(
+            {"detail": "Déconnexion réussie — le token a été invalidé."},
+            status=status.HTTP_205_RESET_CONTENT
+        )
