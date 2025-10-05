@@ -14,7 +14,10 @@ urlpatterns = [
     path("article/", views.articles, name="article"),
     path("promotion/", views.promotions, name="promotion"),
     path("mon-compte/", views.mon_compte, name="mon_compte"),
-
+    path("about/", views.about, name="about"),
+    path("payments/", views.payments, name="payments"),
+     path("admin/", views.admin_page, name="admin"),
+    
 
     # 🧠 API REST
     path("api/register/", RegisterView.as_view(), name="register"),

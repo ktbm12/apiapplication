@@ -899,18 +899,18 @@
     </section>
 
     <!-- Footer -->
-   
+   <script>
 
- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('login-form');
 
     loginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
         const submitBtn = loginForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
 
         if (!email || !password) {
             showMessage('Veuillez remplir tous les champs obligatoires.', 'error');
@@ -921,50 +921,49 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.disabled = true;
 
         try {
-            // 🔥 Appel réel à ton API de login
-            const response = await fetch('http://127.0.0.1:9000/api/login/', {
+            // Envoi des identifiants au backend
+            const response = await fetch('/api/login/', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,   // ou "username" selon ton API
-                    password: password
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
             });
 
             const data = await response.json();
-            console.log("Réponse API :", data);
 
             if (response.ok) {
-                // ✅ Connexion réussie
                 showMessage('Connexion réussie ! Redirection...', 'success');
 
-                // Sauvegarde du token dans localStorage
+                // Sauvegarde du token si présent
                 if (data.token) {
                     localStorage.setItem('authToken', data.token);
                 }
 
-                // Redirection après succès
-                setTimeout(() => {
-                    window.location.href = '/mon-compte/';
-                }, 1500);
+                // 🔍 Vérifie si c'est un admin
+                if (data.user && (data.user.is_superuser || data.user.is_staff)) {
+                    // 👑 Redirige vers le tableau de bord admin
+                    setTimeout(() => {
+                        window.location.href = '/admin/';
+                    }, 1500);
+                } else {
+                    // 👤 Redirige vers la page d’accueil
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1500);
+                }
             } else {
-                // ⚠️ Erreur d’identifiants
-                let errorMessage = data.detail || "Identifiants incorrects.";
-                showMessage(errorMessage, 'error');
+                // En cas d’erreur
+                showMessage(data.detail || 'Email ou mot de passe incorrect.', 'error');
             }
-
         } catch (error) {
-            console.error("Erreur de connexion :", error);
+            console.error('Erreur API :', error);
             showMessage('Erreur de connexion au serveur.', 'error');
         } finally {
-            submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
+            submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
         }
     });
 
-    // Fonction d'affichage des messages
+    // Petite fonction pour les messages (comme avant)
     function showMessage(message, type) {
         const existingMessage = document.querySelector('.message-alert');
         if (existingMessage) existingMessage.remove();
@@ -972,33 +971,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message-alert message-${type}`;
         messageDiv.textContent = message;
-
         messageDiv.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 500;
-            z-index: 10000;
+            position: fixed; top: 20px; right: 20px;
+            padding: 15px 20px; border-radius: 8px;
+            color: white; font-weight: 500; z-index: 10000;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            animation: slideInRight 0.3s ease-out;
-            max-width: 300px;
         `;
-
-        if (type === 'error') messageDiv.style.backgroundColor = '#e74c3c';
-        else if (type === 'success') messageDiv.style.backgroundColor = '#27ae60';
-        else messageDiv.style.backgroundColor = '#3498db';
-
+        messageDiv.style.backgroundColor = type === 'success' ? '#27ae60' : type === 'error' ? '#e74c3c' : '#3498db';
         document.body.appendChild(messageDiv);
-
-        setTimeout(() => {
-            if (messageDiv.parentNode) messageDiv.remove();
-        }, 4000);
+        setTimeout(() => messageDiv.remove(), 5000);
     }
 });
 </script>
-
     
 {% endblock %}
