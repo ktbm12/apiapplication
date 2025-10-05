@@ -295,4 +295,202 @@
                     }, 1500);
                 });
             });
+
+                // Galerie d'images - detail-specific
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            const mainImage = document.getElementById('main-image');
+            
+            if (thumbnails.length > 0 && mainImage) {
+                thumbnails.forEach(thumbnail => {
+                    thumbnail.addEventListener('click', function() {
+                        thumbnails.forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                        mainImage.src = this.getAttribute('data-image');
+                    });
+                });
+            }
+            
+            // Sélecteur de couleur - detail-specific
+            const colorOptions = document.querySelectorAll('.color-option');
+            colorOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    colorOptions.forEach(o => o.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Sélecteur de taille - detail-specific
+            const sizeOptions = document.querySelectorAll('.size-option');
+            sizeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    sizeOptions.forEach(o => o.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Sélecteur de quantité - detail-specific
+            const minusBtn = document.querySelector('.quantity-btn.minus');
+            const plusBtn = document.querySelector('.quantity-btn.plus');
+            const quantityInput = document.querySelector('.quantity-input');
+            
+            if (minusBtn && plusBtn && quantityInput) {
+                minusBtn.addEventListener('click', function() {
+                    let value = parseInt(quantityInput.value);
+                    if (value > 1) quantityInput.value = value - 1;
+                });
+                
+                plusBtn.addEventListener('click', function() {
+                    let value = parseInt(quantityInput.value);
+                    quantityInput.value = value + 1;
+                });
+            }
+            
+            // Tabs - detail-specific
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    const targetTab = document.getElementById(tabId);
+                    if (targetTab) targetTab.classList.add('active');
+                });
+            });
+            
+            // Ajout au panier - detail-specific
+            const addToCartBtn = document.querySelector('.add-to-cart');
+            const cartCount = document.querySelector('.cart-count');
+            let count = parseInt(cartCount ? cartCount.textContent : 0);
+            
+            if (addToCartBtn && quantityInput) {
+                addToCartBtn.addEventListener('click', function() {
+                    const quantity = parseInt(quantityInput.value);
+                    count += quantity;
+                    if (cartCount) cartCount.textContent = count;
+                    
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-check"></i> Ajouté au panier';
+                    this.style.backgroundColor = '#27ae60';
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.style.backgroundColor = '';
+                    }, 2000);
+                });
+            }
+            
+            // Liste de souhaits - detail-specific
+            const wishlistBtn = document.querySelector('.wishlist-btn');
+            
+            if (wishlistBtn) {
+                wishlistBtn.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    if (this.classList.contains('active')) {
+                        this.innerHTML = '<i class="fas fa-heart"></i>';
+                        this.style.backgroundColor = '#e74c3c';
+                        this.style.color = 'white';
+                    } else {
+                        this.innerHTML = '<i class="far fa-heart"></i>';
+                        this.style.backgroundColor = '';
+                        this.style.color = '';
+                    }
+                });
+            }
+
+                        // Gestion des méthodes de paiement - payments-specific
+            const paymentOptions = document.querySelectorAll('.payment-option');
+            const paymentContents = document.querySelectorAll('.payment-method-content');
+            
+            if (paymentOptions.length > 0) {
+                paymentOptions.forEach(option => {
+                    option.addEventListener('click', function() {
+                        paymentOptions.forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                        
+                        const radio = this.querySelector('input[type="radio"]');
+                        if (radio) radio.checked = true;
+                        
+                        const method = this.getAttribute('data-method');
+                        paymentContents.forEach(content => {
+                            content.style.display = 'none';
+                        });
+                        const targetContent = document.getElementById(method + '-content');
+                        if (targetContent) targetContent.style.display = 'block';
+                    });
+                });
+            }
+            
+            // Formatage du numéro de carte - payments-specific
+            const cardNumberInput = document.getElementById('card-number');
+            
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', function() {
+                    let value = this.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+                    let formattedValue = '';
+                    
+                    for (let i = 0; i < value.length; i++) {
+                        if (i > 0 && i % 4 === 0) {
+                            formattedValue += ' ';
+                        }
+                        formattedValue += value[i];
+                    }
+                    
+                    this.value = formattedValue;
+                });
+            }
+            
+            // Formatage de la date d'expiration - payments-specific
+            const expiryDateInput = document.getElementById('expiry-date');
+            
+            if (expiryDateInput) {
+                expiryDateInput.addEventListener('input', function() {
+                    let value = this.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+                    
+                    if (value.length >= 2) {
+                        this.value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                    }
+                });
+            }
+            
+            // Validation du formulaire - payments-specific
+            const paymentForm = document.getElementById('payment-form');
+            
+            if (paymentForm) {
+                paymentForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const selectedMethod = document.querySelector('.payment-option.selected').getAttribute('data-method');
+                    
+                    if (selectedMethod === 'card') {
+                        const cardNumber = document.getElementById('card-number').value;
+                        const expiryDate = document.getElementById('expiry-date').value;
+                        const cvv = document.getElementById('cvv').value;
+                        const cardholder = document.getElementById('cardholder').value;
+                        
+                        if (!cardNumber || !expiryDate || !cvv || !cardholder) {
+                            alert('Veuillez remplir tous les champs obligatoires pour le paiement par carte.');
+                            return;
+                        }
+                        
+                        if (cardNumber.replace(/\s/g, '').length !== 16) {
+                            alert('Veuillez saisir un numéro de carte valide (16 chiffres).');
+                            return;
+                        }
+                    }
+                    
+                    // Simulation de traitement
+                    const submitBtn = paymentForm.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement en cours...';
+                    submitBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        window.location.href = 'confirmation.html';
+                    }, 2000);
+                });
+            }
 </script>
