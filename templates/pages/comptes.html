@@ -266,3 +266,49 @@
     <script src="{% static 'js/comptes.js' %}"></script>
 </body>
 </html>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("register-form");
+
+    form.addEventListener("submit", async function(e) {
+        e.preventDefault(); // Empêche le rechargement de la page
+
+        // Récupération des données du formulaire
+        const formData = new FormData(form);
+        const data = {
+            username: formData.get("firstname") + " " + formData.get("lastname"),
+            email: formData.get("email"),
+            password: formData.get("password"),
+            password2: formData.get("confirm_password"),
+            phone: formData.get("phone") || "",
+        };
+
+        try {
+            const response = await fetch("/api/register/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": formData.get("csrfmiddlewaretoken"),
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert("✅ Compte créé avec succès !");
+                console.log("Nouvel utilisateur :", result);
+                window.location.href = "/login/"; // Redirige vers la page de connexion
+            } else {
+                console.error("Erreur API :", result);
+                alert("❌ Erreur : " + (result.password || result.email || result.detail || "Impossible de créer le compte"));
+            }
+
+        } catch (error) {
+            console.error("Erreur réseau :", error);
+            alert("⚠️ Une erreur est survenue, veuillez réessayer.");
+        }
+    });
+});
+</script>

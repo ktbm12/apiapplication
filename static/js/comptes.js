@@ -362,52 +362,5 @@ document.addEventListener('DOMContentLoaded', function() {
     document.head.appendChild(style);
 
 
-    document.addEventListener("DOMContentLoaded", () => {
-  const registerForm = document.getElementById("register-form");
-
-  if (!registerForm) return;
-
-  registerForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const firstname = document.getElementById("firstname").value.trim();
-    const lastname = document.getElementById("lastname").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirm-password").value;
-
-    if (password !== confirmPassword) {
-      alert("❌ Les mots de passe ne correspondent pas !");
-      return;
-    }
-
-    const data = {
-      first_name: firstname,
-      last_name: lastname,
-      email: email,
-      password: password,
-    };
-
-    try {
-      const response = await fetch("/api/register/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        alert("✅ Compte créé avec succès !");
-        window.location.href = "/login/"; // redirection vers la page de connexion
-      } else {
-        alert("⚠️ " + (result.detail || "Erreur lors de la création du compte."));
-      }
-    } catch (error) {
-      console.error("Erreur réseau :", error);
-      alert("Erreur réseau, veuillez réessayer plus tard.");
-    }
-  });
-});
-
+    
 });
