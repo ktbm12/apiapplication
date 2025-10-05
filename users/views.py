@@ -7,7 +7,7 @@ def home(request):
     """
     Vue minimale pour afficher la page d'accueil.
     """
-    return render(request, "pages/about.html")
+    return render(request, "pages/contact.html")
 
 
 def login(request):
