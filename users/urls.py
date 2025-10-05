@@ -13,6 +13,8 @@ urlpatterns = [
     path("comptes/", views.comptes, name="comptes"),
     path("article/", views.articles, name="article"),
     path("promotion/", views.promotions, name="promotion"),
+    path("mon-compte/", views.mon_compte, name="mon_compte"),
+
 
     # 🧠 API REST
     path("api/register/", RegisterView.as_view(), name="register"),
