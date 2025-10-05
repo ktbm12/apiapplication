@@ -45,7 +45,7 @@ def login(request):
 
 
 
-def login(request):
+def articles(request):
 
-    return render(request, "pages/login.html")
+    return render(request, "pages/article.html")
 
