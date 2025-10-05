@@ -92,3 +92,12 @@ class LogoutView(APIView):
             {"detail": "Déconnexion réussie — le token a été invalidé."},
             status=status.HTTP_205_RESET_CONTENT
         )
+
+
+from django.shortcuts import render
+
+def register_page(request):
+    return render(request, "users/register.html")
+
+
+
