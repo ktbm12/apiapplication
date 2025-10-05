@@ -361,6 +361,131 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(style);
 
+// ---------- helper CSRF ----------
+function getCsrfToken() {
+  // Essaye d'abord d'obtenir le token depuis le input rendu par {% csrf_token %}
+  const el = document.querySelector('input[name="csrfmiddlewaretoken"]');
+  if (el) return el.value;
+
+  // Fallback: lire dans les cookies
+  const name = 'csrftoken';
+  const cookie = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(name + '='));
+  return cookie ? decodeURIComponent(cookie.split('=')[1]) : '';
+}
+
+// ---------- fonction pour afficher erreurs sous un champ ----------
+function setFieldError(fieldId, message) {
+  const field = document.getElementById(fieldId);
+  if (!field) return;
+  field.style.borderColor = '#e74c3c';
+  // Créer ou remplacer message d'erreur inline
+  let err = field.parentNode.querySelector('.field-error');
+  if (!err) {
+    err = document.createElement('div');
+    err.className = 'field-error';
+    err.style.color = '#e74c3c';
+    err.style.fontSize = '0.9rem';
+    err.style.marginTop = '6px';
+    field.parentNode.appendChild(err);
+  }
+  err.textContent = message;
+}
+
+// ---------- réinit erreurs ----------
+function clearFieldErrors(form) {
+  form.querySelectorAll('.field-error').forEach(n => n.remove());
+  form.querySelectorAll('input, select, textarea').forEach(i => i.style.borderColor = '');
+}
+
+// ---------- submit réel vers l'API ----------
+document.addEventListener("DOMContentLoaded", function() {
+  const registerForm = document.getElementById('register-form');
+  if (!registerForm) return;
+
+  registerForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Valide la dernière étape locale
+    if (!validateStep('3')) return;
+
+    clearFieldErrors(registerForm);
+    const submitBtn = registerForm.querySelector('button[type="submit"]');
+    const originalBtnHTML = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Création du compte...';
+    submitBtn.disabled = true;
+
+    // Préparer payload
+    const firstname = document.getElementById('firstname').value.trim();
+    const lastname = document.getElementById('lastname').value.trim();
+    const username = (firstname + (lastname ? ' ' + lastname : '')).trim() || document.getElementById('email').value.split('@')[0];
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim() || null;
+    const password = document.getElementById('password').value;
+    const password2 = document.getElementById('confirm-password').value;
+
+    const payload = {
+      username: username,
+      email: email,
+      password: password,
+      password2: password2,
+      phone: phone
+    };
+
+    try {
+      const csrfToken = getCsrfToken();
+      const res = await fetch('/api/register/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // ⚠️ avoir le CSRF ne nuit pas même si endpoint n'en a pas forcément besoin
+          'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify(payload),
+        credentials: 'same-origin' // utile si cookie de session/CSRF est attendu
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok) {
+        // Succès : API renvoie l'utilisateur créé
+        showMessage('✅ Compte créé avec succès ! Redirection...', 'success');
+        setTimeout(() => { window.location.href = '/login/'; }, 1400);
+      } else {
+        // Erreurs : DRF renvoie généralement un dict {field: [errors]}
+        // On affiche les erreurs par champ si possible.
+        if (typeof data === 'object' && Object.keys(data).length) {
+          // Cas erreurs par champs
+          for (const [key, value] of Object.entries(data)) {
+            const msg = Array.isArray(value) ? value.join(' ') : String(value);
+            // mappe le champ serialiser -> id du champ du formulaire
+            // ex: password2 -> confirm-password, first_name -> firstname, phone -> phone
+            const mapping = {
+              'password2': 'confirm-password',
+              'confirm_password': 'confirm-password',
+              'first_name': 'firstname',
+              'last_name': 'lastname',
+              'password': 'password',
+              'email': 'email',
+              'username': 'firstname' // si tu veux sur username, tu peux adapter
+            };
+            const fieldId = mapping[key] || key;
+            setFieldError(fieldId, msg);
+          }
+          // message global si présent
+          if (data.detail) showMessage(data.detail, 'error');
+        } else {
+          showMessage('Erreur lors de la création du compte.', 'error');
+        }
+      }
+    } catch (err) {
+      console.error('Erreur fetch:', err);
+      showMessage('Erreur réseau. Vérifiez votre connexion.', 'error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnHTML;
+    }
+  });
+});
 
     
 });
