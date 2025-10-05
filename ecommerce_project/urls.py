@@ -9,7 +9,8 @@ from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 schema_view = get_schema_view(
     openapi.Info(
         title="Ecommerce API",
@@ -27,14 +28,12 @@ urlpatterns = [
     path("", include("users.urls")),  # Page d'accueil
     path("orders/", include("orders.urls")),
     path("payments/", include("payments.urls")),
-    path("contact/", include("contact.urls")),
+    path("contact/", include("contact.urls")), 
     path("catalogue/", include("catalogue.urls")),
 
-
-    # 🔹 Swagger UI
-    path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
-    # 🔹 Redoc UI (autre style)
-    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
+    # Swagger endpoints
+    path("swagger/", schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path("redoc/", schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
 
 # gestion des fichiers médias en mode développement
