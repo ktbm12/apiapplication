@@ -7,10 +7,10 @@ def home(request):
     """
     Vue minimale pour afficher la page d'accueil.
     """
-    return render(request, "pages/comptes.html")
+    return render(request, "pages/index.html")
 
 
-def login(request):
+def comptes(request):
 
     return render(request, "home/comptes/comptes.html")
 
@@ -18,4 +18,34 @@ def login(request):
 
 def contact(request):
 
-    return render(request, "contact/contact.html")
+    return render(request, "pages/contact.html")
+
+
+def promotions(request):
+
+    return render(request, "pages/promotions.html")
+
+
+
+def about(request):
+
+    return render(request, "pages/about..html")
+
+
+def payments(request):
+
+    return render(request, "pages/payments.html")
+
+
+
+
+def login(request):
+
+    return render(request, "pages/login.html")
+
+
+
+def login(request):
+
+    return render(request, "pages/login.html")
+
