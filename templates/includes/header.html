@@ -5,33 +5,68 @@
             <span><i class="fas fa-phone"></i> +33 1 23 45 67 89</span>
             <span><i class="fas fa-envelope"></i> contact@luxeshop.com</span>
         </div>
+
         <div class="top-links">
             <a href="{% url 'users:contact' %}"><i class="fas fa-question-circle"></i> Aide</a>
             <a href="#"><i class="fas fa-shipping-fast"></i> Suivi de commande</a>
-            <a href="{% url 'users:comptes' %}"><i class="fas fa-user"></i> Mon compte</a>
+
+            {% if user.is_authenticated %}
+                {% if user.is_superuser or user.is_staff %}
+                    <a href="{% url 'users:admin_dashboard' %}">
+                        <i class="fas fa-user-shield"></i> Admin Dashboard
+                    </a>
+                {% else %}
+                    <a href="{% url 'users:mon_compte' %}">
+                        <i class="fas fa-user"></i> Mon compte
+                    </a>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'users:login' %}">
+                    <i class="fas fa-sign-in-alt"></i> Connexion
+                </a>
+                <a href="{% url 'users:register' %}">
+                    <i class="fas fa-user-plus"></i> Inscription
+                </a>
+            {% endif %}
         </div>
     </div>
 </div>
+
 <!-- Header -->
 <header>
     <div class="main-header">
         <div class="container">
             <a href="{% url 'users:home' %}">
-            <div class="logo">Luxe<span>Shop</span></div>
+                <div class="logo">Luxe<span>Shop</span></div>
             </a>
-           
+
             <div class="search-bar">
                 <input type="text" placeholder="Rechercher un produit en promotion...">
                 <button><i class="fas fa-search"></i></button>
             </div>
-           
+
             <div class="header-actions">
                 <a href="#"><i class="fas fa-heart"></i></a>
                 <a href="#" class="cart">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count">3</span>
                 </a>
-                <a href="#"><i class="fas fa-user"></i></a>
+
+                {% if user.is_authenticated %}
+                    {% if user.is_superuser or user.is_staff %}
+                        <a href="{% url 'admin:index' %}" title="Admin Dashboard">
+                            <i class="fas fa-user-shield"></i>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'users:mon_compte' %}" title="Mon compte">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'users:login' %}" title="Connexion">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>

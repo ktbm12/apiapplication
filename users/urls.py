@@ -16,7 +16,7 @@ urlpatterns = [
     path("mon-compte/", views.mon_compte, name="mon_compte"),
     path("about/", views.about, name="about"),
     path("payments/", views.payments, name="payments"),
-     path("admin/", views.admin_page, name="admin"),
+     path("admindashboard/", views.admin_page, name="admin_dashboard"),
     
 
     # 🧠 API REST

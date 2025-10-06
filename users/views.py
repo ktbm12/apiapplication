@@ -105,4 +105,4 @@ def mon_compte(request):
     return render(request, "home/comptes/mon_compte.html")
 
 def  admin_page(request):
-    return render(request, "home/admindashboard.html")
+    return render(request, "dashboard/admindashboard.html")
