@@ -1,0 +1,546 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Gestion des Catégories | LuxeShop{% endblock %}
+
+{% block content %}
+<!-- En-tête de page -->
+<div class="page-header">
+    <div class="page-title">
+        <h1>Gestion des Catégories</h1>
+        <p>Gérez les catégories de votre catalogue produits</p>
+    </div>
+    
+    <div class="page-actions">
+        <button class="btn btn-outline" onclick="exportCategories()">
+            <i class="fas fa-download"></i> Exporter
+        </button>
+        <button class="btn" onclick="showAddForm()">
+            <i class="fas fa-plus"></i> Nouvelle Catégorie
+        </button>
+    </div>
+</div>
+
+<!-- Cartes de Statistiques -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon">
+                <i class="fas fa-tags"></i>
+            </div>
+            <div class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                +5.2%
+            </div>
+        </div>
+        <div class="stat-value" id="totalCategories">0</div>
+        <div class="stat-label">Catégories totales</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon">
+                <i class="fas fa-boxes"></i>
+            </div>
+            <div class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                +12.1%
+            </div>
+        </div>
+        <div class="stat-value" id="totalProducts">0</div>
+        <div class="stat-label">Produits total</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                +3.4%
+            </div>
+        </div>
+        <div class="stat-value" id="activeCategories">0</div>
+        <div class="stat-label">Catégories actives</div>
+    </div>
+</div>
+
+<!-- Formulaire d'ajout -->
+<div class="form-card" id="addForm" style="display: none;">
+    <div class="form-header">
+        <h3>Ajouter une nouvelle catégorie</h3>
+        <button class="btn-close" onclick="hideAddForm()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <form id="categoryForm" class="form-body">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Nom de la catégorie *</label>
+            <input type="text" id="name" name="name" required class="form-input">
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" class="form-textarea" rows="3"></textarea>
+        </div>
+        
+        <div class="form-actions">
+            <button type="button" class="btn btn-outline" onclick="hideAddForm()">Annuler</button>
+            <button type="submit" class="btn">
+                <i class="fas fa-plus"></i> Ajouter la catégorie
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Tableau des catégories -->
+<div class="table-card">
+    <div class="table-header">
+        <h3>Liste des catégories</h3>
+        <div class="table-actions">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Rechercher une catégorie...">
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="loadCategories()">
+                <i class="fas fa-refresh"></i> Actualiser
+            </button>
+        </div>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Produits</th>
+                    <th>Créé le</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="categoriesTable">
+                <tr>
+                    <td colspan="7" class="text-center">
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Chargement des catégories...
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="table-footer">
+        <div class="table-info">
+            Affichage de <span id="showingCount">0</span> sur <span id="totalCount">0</span> catégories
+        </div>
+        <div class="table-pagination">
+            <button class="btn btn-sm btn-outline" id="prevBtn" disabled>
+                <i class="fas fa-chevron-left"></i> Précédent
+            </button>
+            <span class="pagination-info">Page <span id="currentPage">1</span></span>
+            <button class="btn btn-sm btn-outline" id="nextBtn" disabled>
+                Suivant <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+<div class="modal-overlay" id="deleteModal" style="display: none;">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Confirmer la suppression</h3>
+            <button class="btn-close" onclick="closeDeleteModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Êtes-vous sûr de vouloir supprimer la catégorie "<strong id="deleteCategoryName"></strong>" ?</p>
+            <p class="text-warning">Cette action est irréversible et affectera tous les produits associés.</p>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-outline" onclick="closeDeleteModal()">Annuler</button>
+            <button class="btn btn-danger" id="confirmDeleteBtn">
+                <i class="fas fa-trash"></i> Supprimer
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Variables globales
+let currentCategories = [];
+let currentPage = 1;
+const itemsPerPage = 10;
+let categoryToDelete = null;
+
+// Configuration API
+const API_URL = "http://127.0.0.1:9000/api/catalogue/categories/";
+
+// 🔹 Fonction pour obtenir le CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
+// 🔹 Gestion du formulaire
+function showAddForm() {
+    document.getElementById('addForm').style.display = 'block';
+}
+
+function hideAddForm() {
+    document.getElementById('addForm').style.display = 'none';
+    document.getElementById('categoryForm').reset();
+}
+
+// 🔹 Charger les catégories
+async function loadCategories() {
+    const tableBody = document.getElementById('categoriesTable');
+    tableBody.innerHTML = `
+        <tr>
+            <td colspan="7" class="text-center">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    Chargement des catégories...
+                </div>
+            </td>
+        </tr>
+    `;
+
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('Erreur réseau');
+        
+        const data = await response.json();
+        currentCategories = data;
+        
+        updateStats(data);
+        renderCategoriesTable(data);
+        setupPagination(data);
+        
+    } catch (error) {
+        console.error('Erreur lors du chargement :', error);
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center text-error">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Erreur lors du chargement des catégories
+                </td>
+            </tr>
+        `;
+    }
+}
+
+// 🔹 Mettre à jour les statistiques
+function updateStats(categories) {
+    document.getElementById('totalCategories').textContent = categories.length;
+    document.getElementById('activeCategories').textContent = categories.length; // À adapter selon vos besoins
+    
+    // Calculer le total des produits (à adapter selon votre API)
+    const totalProducts = categories.reduce((sum, cat) => sum + (cat.product_count || 0), 0);
+    document.getElementById('totalProducts').textContent = totalProducts;
+}
+
+// 🔹 Afficher les catégories dans le tableau
+function renderCategoriesTable(categories) {
+    const tableBody = document.getElementById('categoriesTable');
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    
+    // Filtrer les catégories
+    const filteredCategories = categories.filter(cat => 
+        cat.name.toLowerCase().includes(searchTerm) ||
+        (cat.description && cat.description.toLowerCase().includes(searchTerm))
+    );
+    
+    if (filteredCategories.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center text-muted">
+                    Aucune catégorie trouvée
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    // Pagination
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedCategories = filteredCategories.slice(startIndex, startIndex + itemsPerPage);
+    
+    tableBody.innerHTML = paginatedCategories.map(cat => `
+        <tr>
+            <td>${cat.id}</td>
+            <td>
+                <div class="flex items-center gap-3">
+                    <div class="category-avatar">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <strong>${cat.name}</strong>
+                </div>
+            </td>
+            <td>${cat.description || '-'}</td>
+            <td>
+                <span class="badge">${cat.product_count || 0} produits</span>
+            </td>
+            <td>${cat.created ? new Date(cat.created).toLocaleDateString('fr-FR') : '-'}</td>
+            <td>
+                <span class="status status-active">Active</span>
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn-icon" onclick="editCategory(${cat.id})" title="Modifier">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-icon btn-danger" onclick="confirmDelete(${cat.id}, '${cat.name}')" title="Supprimer">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+    
+    // Mettre à jour les informations de pagination
+    document.getElementById('showingCount').textContent = paginatedCategories.length;
+    document.getElementById('totalCount').textContent = filteredCategories.length;
+}
+
+// 🔹 Configuration de la pagination
+function setupPagination(categories) {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const filteredCategories = categories.filter(cat => 
+        cat.name.toLowerCase().includes(searchTerm) ||
+        (cat.description && cat.description.toLowerCase().includes(searchTerm))
+    );
+    
+    const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const currentPageSpan = document.getElementById('currentPage');
+    
+    currentPageSpan.textContent = currentPage;
+    
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+    
+    prevBtn.onclick = () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderCategoriesTable(categories);
+        }
+    };
+    
+    nextBtn.onclick = () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderCategoriesTable(categories);
+        }
+    };
+}
+
+// 🔹 Ajouter une catégorie
+document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    
+    const name = document.getElementById('name').value.trim();
+    const description = document.getElementById('description').value.trim();
+
+    if (!name) {
+        alert("Veuillez entrer un nom de catégorie.");
+        return;
+    }
+
+    // Désactiver le bouton pendant l'envoi
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Ajout en cours...';
+
+    try {
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken,
+            },
+            body: JSON.stringify({ name, description }),
+        });
+
+        if (response.ok) {
+            form.reset();
+            hideAddForm();
+            await loadCategories();
+            showNotification('Catégorie ajoutée avec succès!', 'success');
+        } else {
+            const err = await response.json();
+            showNotification('Erreur: ' + JSON.stringify(err), 'error');
+        }
+    } catch (error) {
+        console.error("Erreur d'ajout :", error);
+        showNotification("Impossible d'ajouter la catégorie.", 'error');
+    } finally {
+        // Réactiver le bouton
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+    }
+});
+
+// 🔹 Confirmer la suppression
+function confirmDelete(id, name) {
+    categoryToDelete = id;
+    document.getElementById('deleteCategoryName').textContent = name;
+    document.getElementById('deleteModal').style.display = 'flex';
+    
+    document.getElementById('confirmDeleteBtn').onclick = performDelete;
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+    categoryToDelete = null;
+}
+
+// 🔹 Supprimer une catégorie
+async function performDelete() {
+    if (!categoryToDelete) return;
+
+    try {
+        const response = await fetch(`${API_URL}${categoryToDelete}/`, { 
+            method: "DELETE",
+            headers: { "X-CSRFToken": csrftoken }
+        });
+        
+        if (response.ok) {
+            closeDeleteModal();
+            await loadCategories();
+            showNotification('Catégorie supprimée avec succès!', 'success');
+        } else {
+            showNotification('Erreur lors de la suppression.', 'error');
+        }
+    } catch (error) {
+        console.error("Erreur suppression :", error);
+        showNotification("Impossible de supprimer la catégorie.", 'error');
+    }
+}
+
+// 🔹 Éditer une catégorie (placeholder)
+function editCategory(id) {
+    showNotification('Fonctionnalité d\'édition à implémenter', 'info');
+    // À implémenter selon vos besoins
+}
+
+// 🔹 Exporter les catégories
+function exportCategories() {
+    showNotification('Fonctionnalité d\'export à implémenter', 'info');
+    // À implémenter selon vos besoins
+}
+
+// 🔹 Recherche en temps réel
+document.getElementById('searchInput').addEventListener('input', () => {
+    currentPage = 1;
+    renderCategoriesTable(currentCategories);
+    setupPagination(currentCategories);
+});
+
+// 🔹 Notification
+function showNotification(message, type = 'info') {
+    // Implémentez votre système de notification ici
+    alert(message); // Temporaire - à remplacer par un vrai système de notifications
+}
+
+// Charger les catégories au démarrage
+document.addEventListener('DOMContentLoaded', loadCategories);
+</script>
+
+<style>
+.category-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--primary-color, #3498db);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.btn-icon {
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    background: #f8f9fa;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-icon:hover {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.btn-danger {
+    background: #fff5f5;
+    color: #e53e3e;
+}
+
+.btn-danger:hover {
+    background: #fed7d7;
+    color: #c53030;
+}
+
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    padding: 20px;
+    color: #6c757d;
+}
+
+.text-center { text-align: center; }
+.text-muted { color: #6c757d; }
+.text-error { color: #e53e3e; }
+.text-warning { color: #dd6b20; }
+
+.flex { display: flex; }
+.items-center { align-items: center; }
+.gap-3 { gap: 12px; }
+
+.badge {
+    background: #e9ecef;
+    color: #495057;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+</style>
+{% endblock %}

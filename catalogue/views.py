@@ -28,3 +28,8 @@ class ProductImageViewSet(viewsets.ModelViewSet):
     queryset = ProductImage.objects.select_related("product")
     serializer_class = ProductImageSerializer
     permission_classes = [IsAdminUser]
+
+from django.shortcuts import render
+
+def admin_products(request):
+    return render(request, 'dashboard/product.html')

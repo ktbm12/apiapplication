@@ -1,0 +1,186 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="admin-page p-6">
+    <h1 class="text-3xl font-bold mb-4">Gestion des Produits</h1>
+
+    <!-- Formulaire d'ajout -->
+    <div class="bg-white p-4 rounded shadow mb-6">
+        <h2 class="text-xl font-semibold mb-2">Ajouter un produit</h2>
+        <form id="productForm" class="grid grid-cols-2 gap-3">
+            {% csrf_token %}
+            <input type="text" id="name" placeholder="Nom du produit" required class="border p-2 rounded">
+            <input type="number" id="price" placeholder="Prix" step="0.01" required class="border p-2 rounded">
+            <input type="number" id="stock" placeholder="Stock" required class="border p-2 rounded">
+            <select id="category" required class="border p-2 rounded">
+                <option value="">Sélectionnez une catégorie</option>
+            </select>
+            <textarea id="description" placeholder="Description" class="border p-2 col-span-2 rounded"></textarea>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 col-span-2">
+                Ajouter le produit
+            </button>
+        </form>
+    </div>
+
+    <!-- Tableau des produits -->
+    <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-xl font-semibold mb-3">Liste des produits</h2>
+        <table class="w-full border-collapse border border-gray-200">
+            <thead>
+                <tr class="bg-gray-100 text-left">
+                    <th class="border p-2">ID</th>
+                    <th class="border p-2">Nom</th>
+                    <th class="border p-2">Catégorie</th>
+                    <th class="border p-2">Prix</th>
+                    <th class="border p-2">Stock</th>
+                    <th class="border p-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="productsTable">
+                <tr><td colspan="6" class="text-center p-3 text-gray-500">Chargement...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+// ✅ Fonction fiable pour récupérer le cookie CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie("csrftoken");
+
+document.addEventListener("DOMContentLoaded", () => {
+    const BASE_URL = "http://127.0.0.1:9000/api/catalogue/";
+    const PRODUCTS_URL = `${BASE_URL}products/`;
+    const CATEGORIES_URL = `${BASE_URL}categories/`;
+
+    const productForm = document.getElementById("productForm");
+    const tableBody = document.getElementById("productsTable");
+    const categorySelect = document.getElementById("category");
+
+    // 🔹 Charger les catégories
+    async function loadCategories() {
+        try {
+            const res = await fetch(CATEGORIES_URL);
+            const categories = await res.json();
+            categorySelect.innerHTML = '<option value="">Sélectionnez une catégorie</option>';
+            categories.forEach(cat => {
+                categorySelect.insertAdjacentHTML('beforeend', `<option value="${cat.id}">${cat.name}</option>`);
+            });
+        } catch (err) {
+            console.error("Erreur chargement catégories :", err);
+        }
+    }
+
+    // 🔹 Charger les produits
+    async function loadProducts() {
+        tableBody.innerHTML = '<tr><td colspan="6" class="text-center p-3 text-gray-500">Chargement...</td></tr>';
+        try {
+            const res = await fetch(PRODUCTS_URL);
+            const products = await res.json();
+
+            if (!Array.isArray(products) || products.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="text-center p-3 text-gray-500">Aucun produit trouvé.</td></tr>';
+                return;
+            }
+
+            tableBody.innerHTML = "";
+            products.forEach(prod => {
+                const row = `
+                    <tr>
+                        <td class="border p-2">${prod.id}</td>
+                        <td class="border p-2">${prod.name}</td>
+                        <td class="border p-2">${prod.category_name || "-"}</td>
+                        <td class="border p-2">${prod.price} FCFA</td>
+                        <td class="border p-2">${prod.stock}</td>
+                        <td class="border p-2 text-center">
+                            <button onclick="deleteProduct(${prod.id})" 
+                                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                                Supprimer
+                            </button>
+                        </td>
+                    </tr>`;
+                tableBody.insertAdjacentHTML("beforeend", row);
+            });
+        } catch (err) {
+            console.error("Erreur chargement produits :", err);
+            tableBody.innerHTML = '<tr><td colspan="6" class="text-center p-3 text-red-500">Erreur de chargement</td></tr>';
+        }
+    }
+
+ const data = {
+    title: document.getElementById("name").value.trim(),
+    price: document.getElementById("price").value,
+    stock: document.getElementById("stock").value,
+    description: document.getElementById("description").value.trim(),
+    category: document.getElementById("category").value
+};
+
+if (!data.title || !data.category) {
+    alert("Veuillez remplir tous les champs obligatoires.");
+    return;
+}
+
+        try {
+            const res = await fetch(PRODUCTS_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken,
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (res.ok) {
+                alert("✅ Produit ajouté avec succès !");
+                productForm.reset();
+                await loadProducts();
+            } else {
+                const err = await res.json();
+                alert("Erreur : " + JSON.stringify(err));
+            }
+        } catch (err) {
+            console.error("Erreur d’ajout :", err);
+            alert("Erreur lors de l’ajout du produit.");
+        }
+    });
+
+    // 🔹 Supprimer un produit
+    window.deleteProduct = async (id) => {
+        if (!confirm("Supprimer ce produit ?")) return;
+        try {
+            const res = await fetch(`${PRODUCTS_URL}${id}/`, {
+                method: "DELETE",
+                headers: { "X-CSRFToken": csrftoken },
+            });
+            if (res.ok) {
+                alert("✅ Produit supprimé !");
+                loadProducts();
+            } else {
+                alert("Erreur lors de la suppression.");
+            }
+        } catch (err) {
+            console.error("Erreur suppression :", err);
+        }
+    };
+
+    // Initialisation
+    loadCategories();
+    loadProducts();
+});
+</script>
+
+{% endblock %}

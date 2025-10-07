@@ -10,6 +10,13 @@ router.register(r'categories', CategoryViewSet)
 router.register(r'products', ProductViewSet)
 router.register(r'images', ProductImageViewSet)
 
+from django.urls import path
+from . import views_admin
+
+app_name = "catalogue_admin"
+
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", views_admin.admin_dashboard, name="dashboard"),
+    path("categories/", views_admin.admin_categories, name="categories"),
+     path('products/', views.admin_products, name='products'),  # ✅ nouveau lien
 ]

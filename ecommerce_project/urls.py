@@ -30,6 +30,9 @@ urlpatterns = [
     path("payments/", include("payments.urls")),
     path("contact/", include("contact.urls")), 
     path("catalogue/", include("catalogue.urls")),
+    path("api/catalogue/", include("catalogue.api_urls")),
+
+
 
     # Swagger endpoints
     path("swagger/", schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
