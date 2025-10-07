@@ -74,25 +74,20 @@
             <i class="fas fa-times"></i>
         </button>
     </div>
-    <form id="categoryForm" class="form-body">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="name">Nom de la catégorie *</label>
-            <input type="text" id="name" name="name" required class="form-input">
-        </div>
-        
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" name="description" class="form-textarea" rows="3"></textarea>
-        </div>
-        
-        <div class="form-actions">
-            <button type="button" class="btn btn-outline" onclick="hideAddForm()">Annuler</button>
-            <button type="submit" class="btn">
-                <i class="fas fa-plus"></i> Ajouter la catégorie
-            </button>
-        </div>
-    </form>
+   <form id="productForm" class="grid grid-cols-2 gap-3">
+    {% csrf_token %}
+    <input type="text" id="name" placeholder="Nom du produit" required class="border p-2 rounded">
+    <input type="number" id="price" placeholder="Prix" step="0.01" required class="border p-2 rounded">
+    <input type="number" id="stock" placeholder="Stock" required class="border p-2 rounded">
+    <select id="category" required class="border p-2 rounded">
+        <option value="">Sélectionnez une catégorie</option>
+    </select>
+    <textarea id="description" placeholder="Description" class="border p-2 col-span-2 rounded"></textarea>
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 col-span-2">
+        Ajouter le produit
+    </button>
+</form>
+
 </div>
 
 <!-- Tableau des catégories -->
@@ -174,304 +169,165 @@
     </div>
 </div>
 {% endblock %}
-
-{% block extra_js %}
+{% block scripts %}
 <script>
-// Variables globales
-let currentCategories = [];
-let currentPage = 1;
-const itemsPerPage = 10;
-let categoryToDelete = null;
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("✅ DOM chargé, initialisation du script produits...");
 
-// Configuration API
-const API_URL = "http://127.0.0.1:9000/api/catalogue/categories/";
-
-// 🔹 Fonction pour obtenir le CSRF token
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+    // Fonction pour récupérer le cookie CSRF
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
         }
+        return cookieValue;
     }
-    return cookieValue;
-}
+    const csrftoken = getCookie("csrftoken");
 
-const csrftoken = getCookie('csrftoken');
+    const BASE_URL = "http://127.0.0.1:9000/api/catalogue/";
+    const PRODUCTS_URL = `${BASE_URL}products/`;
+    const CATEGORIES_URL = `${BASE_URL}categories/`;
 
-// 🔹 Gestion du formulaire
-function showAddForm() {
-    document.getElementById('addForm').style.display = 'block';
-}
+    // Références DOM
+    const productForm = document.getElementById("productForm");
+    const tableBody = document.getElementById("productsTable");
+    const categorySelect = document.getElementById("category");
 
-function hideAddForm() {
-    document.getElementById('addForm').style.display = 'none';
-    document.getElementById('categoryForm').reset();
-}
-
-// 🔹 Charger les catégories
-async function loadCategories() {
-    const tableBody = document.getElementById('categoriesTable');
-    tableBody.innerHTML = `
-        <tr>
-            <td colspan="7" class="text-center">
-                <div class="loading-spinner">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    Chargement des catégories...
-                </div>
-            </td>
-        </tr>
-    `;
-
-    try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error('Erreur réseau');
-        
-        const data = await response.json();
-        currentCategories = data;
-        
-        updateStats(data);
-        renderCategoriesTable(data);
-        setupPagination(data);
-        
-    } catch (error) {
-        console.error('Erreur lors du chargement :', error);
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="7" class="text-center text-error">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Erreur lors du chargement des catégories
-                </td>
-            </tr>
-        `;
-    }
-}
-
-// 🔹 Mettre à jour les statistiques
-function updateStats(categories) {
-    document.getElementById('totalCategories').textContent = categories.length;
-    document.getElementById('activeCategories').textContent = categories.length; // À adapter selon vos besoins
-    
-    // Calculer le total des produits (à adapter selon votre API)
-    const totalProducts = categories.reduce((sum, cat) => sum + (cat.product_count || 0), 0);
-    document.getElementById('totalProducts').textContent = totalProducts;
-}
-
-// 🔹 Afficher les catégories dans le tableau
-function renderCategoriesTable(categories) {
-    const tableBody = document.getElementById('categoriesTable');
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    
-    // Filtrer les catégories
-    const filteredCategories = categories.filter(cat => 
-        cat.name.toLowerCase().includes(searchTerm) ||
-        (cat.description && cat.description.toLowerCase().includes(searchTerm))
-    );
-    
-    if (filteredCategories.length === 0) {
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="7" class="text-center text-muted">
-                    Aucune catégorie trouvée
-                </td>
-            </tr>
-        `;
-        return;
-    }
-    
-    // Pagination
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const paginatedCategories = filteredCategories.slice(startIndex, startIndex + itemsPerPage);
-    
-    tableBody.innerHTML = paginatedCategories.map(cat => `
-        <tr>
-            <td>${cat.id}</td>
-            <td>
-                <div class="flex items-center gap-3">
-                    <div class="category-avatar">
-                        <i class="fas fa-tag"></i>
-                    </div>
-                    <strong>${cat.name}</strong>
-                </div>
-            </td>
-            <td>${cat.description || '-'}</td>
-            <td>
-                <span class="badge">${cat.product_count || 0} produits</span>
-            </td>
-            <td>${cat.created ? new Date(cat.created).toLocaleDateString('fr-FR') : '-'}</td>
-            <td>
-                <span class="status status-active">Active</span>
-            </td>
-            <td>
-                <div class="action-buttons">
-                    <button class="btn-icon" onclick="editCategory(${cat.id})" title="Modifier">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn-icon btn-danger" onclick="confirmDelete(${cat.id}, '${cat.name}')" title="Supprimer">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </td>
-        </tr>
-    `).join('');
-    
-    // Mettre à jour les informations de pagination
-    document.getElementById('showingCount').textContent = paginatedCategories.length;
-    document.getElementById('totalCount').textContent = filteredCategories.length;
-}
-
-// 🔹 Configuration de la pagination
-function setupPagination(categories) {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const filteredCategories = categories.filter(cat => 
-        cat.name.toLowerCase().includes(searchTerm) ||
-        (cat.description && cat.description.toLowerCase().includes(searchTerm))
-    );
-    
-    const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const currentPageSpan = document.getElementById('currentPage');
-    
-    currentPageSpan.textContent = currentPage;
-    
-    prevBtn.disabled = currentPage === 1;
-    nextBtn.disabled = currentPage === totalPages || totalPages === 0;
-    
-    prevBtn.onclick = () => {
-        if (currentPage > 1) {
-            currentPage--;
-            renderCategoriesTable(categories);
-        }
-    };
-    
-    nextBtn.onclick = () => {
-        if (currentPage < totalPages) {
-            currentPage++;
-            renderCategoriesTable(categories);
-        }
-    };
-}
-
-// 🔹 Ajouter une catégorie
-document.getElementById('categoryForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const form = e.target;
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    
-    const name = document.getElementById('name').value.trim();
-    const description = document.getElementById('description').value.trim();
-
-    if (!name) {
-        alert("Veuillez entrer un nom de catégorie.");
+    if (!productForm || !tableBody || !categorySelect) {
+        console.error("❌ Erreur : certains éléments du DOM n'ont pas été trouvés !");
         return;
     }
 
-    // Désactiver le bouton pendant l'envoi
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Ajout en cours...';
-
-    try {
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken,
-            },
-            body: JSON.stringify({ name, description }),
-        });
-
-        if (response.ok) {
-            form.reset();
-            hideAddForm();
-            await loadCategories();
-            showNotification('Catégorie ajoutée avec succès!', 'success');
-        } else {
-            const err = await response.json();
-            showNotification('Erreur: ' + JSON.stringify(err), 'error');
+    // 🔹 Charger les catégories
+    async function loadCategories() {
+        try {
+            const res = await fetch(CATEGORIES_URL);
+            const categories = await res.json();
+            categorySelect.innerHTML = '<option value="">Sélectionnez une catégorie</option>';
+            categories.forEach(cat => {
+                categorySelect.insertAdjacentHTML(
+                    'beforeend',
+                    `<option value="${cat.id}">${cat.name}</option>`
+                );
+            });
+            console.log("✅ Catégories chargées :", categories);
+        } catch (err) {
+            console.error("Erreur chargement catégories :", err);
         }
-    } catch (error) {
-        console.error("Erreur d'ajout :", error);
-        showNotification("Impossible d'ajouter la catégorie.", 'error');
-    } finally {
-        // Réactiver le bouton
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
     }
-});
 
-// 🔹 Confirmer la suppression
-function confirmDelete(id, name) {
-    categoryToDelete = id;
-    document.getElementById('deleteCategoryName').textContent = name;
-    document.getElementById('deleteModal').style.display = 'flex';
-    
-    document.getElementById('confirmDeleteBtn').onclick = performDelete;
-}
+    // 🔹 Charger les produits
+    async function loadProducts() {
+        tableBody.innerHTML = '<tr><td colspan="6" class="text-center p-3 text-gray-500">Chargement...</td></tr>';
+        try {
+            const res = await fetch(PRODUCTS_URL);
+            const products = await res.json();
 
-function closeDeleteModal() {
-    document.getElementById('deleteModal').style.display = 'none';
-    categoryToDelete = null;
-}
+            if (!Array.isArray(products) || products.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="text-center p-3 text-gray-500">Aucun produit trouvé.</td></tr>';
+                return;
+            }
 
-// 🔹 Supprimer une catégorie
-async function performDelete() {
-    if (!categoryToDelete) return;
-
-    try {
-        const response = await fetch(`${API_URL}${categoryToDelete}/`, { 
-            method: "DELETE",
-            headers: { "X-CSRFToken": csrftoken }
-        });
-        
-        if (response.ok) {
-            closeDeleteModal();
-            await loadCategories();
-            showNotification('Catégorie supprimée avec succès!', 'success');
-        } else {
-            showNotification('Erreur lors de la suppression.', 'error');
+            tableBody.innerHTML = "";
+            products.forEach(prod => {
+                const row = `
+                    <tr>
+                        <td class="border p-2">${prod.id}</td>
+                        <td class="border p-2">${prod.title}</td>
+                        <td class="border p-2">${prod.category_name || "-"}</td>
+                        <td class="border p-2">${prod.price} FCFA</td>
+                        <td class="border p-2">${prod.stock}</td>
+                        <td class="border p-2 text-center">
+                            <button onclick="deleteProduct('${prod.id}')" 
+                                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                                Supprimer
+                            </button>
+                        </td>
+                    </tr>`;
+                tableBody.insertAdjacentHTML("beforeend", row);
+            });
+        } catch (err) {
+            console.error("Erreur chargement produits :", err);
         }
-    } catch (error) {
-        console.error("Erreur suppression :", error);
-        showNotification("Impossible de supprimer la catégorie.", 'error');
     }
-}
 
-// 🔹 Éditer une catégorie (placeholder)
-function editCategory(id) {
-    showNotification('Fonctionnalité d\'édition à implémenter', 'info');
-    // À implémenter selon vos besoins
-}
+    // 🔹 Ajouter un produit
+    productForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        console.log("🟢 Soumission du formulaire déclenchée !");
 
-// 🔹 Exporter les catégories
-function exportCategories() {
-    showNotification('Fonctionnalité d\'export à implémenter', 'info');
-    // À implémenter selon vos besoins
-}
+        const data = {
+            title: document.getElementById("name").value.trim(),
+            description: document.getElementById("description").value.trim(),
+            price: parseFloat(document.getElementById("price").value),
+            stock: parseInt(document.getElementById("stock").value),
+            category: document.getElementById("category").value
+        };
 
-// 🔹 Recherche en temps réel
-document.getElementById('searchInput').addEventListener('input', () => {
-    currentPage = 1;
-    renderCategoriesTable(currentCategories);
-    setupPagination(currentCategories);
+        console.log("📦 Données envoyées :", data);
+
+        if (!data.title || !data.category) {
+            alert("Veuillez remplir tous les champs obligatoires.");
+            return;
+        }
+
+        try {
+            const res = await fetch(PRODUCTS_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken,
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (res.ok) {
+                alert("✅ Produit ajouté avec succès !");
+                productForm.reset();
+                await loadProducts();
+            } else {
+                const err = await res.json();
+                alert("❌ Erreur : " + JSON.stringify(err));
+                console.error("Erreur serveur :", err);
+            }
+        } catch (err) {
+            console.error("Erreur d’ajout :", err);
+        }
+    });
+
+    // 🔹 Supprimer un produit
+    window.deleteProduct = async (id) => {
+        if (!confirm("Supprimer ce produit ?")) return;
+        try {
+            const res = await fetch(`${PRODUCTS_URL}${id}/`, {
+                method: "DELETE",
+                headers: { "X-CSRFToken": csrftoken },
+            });
+            if (res.ok) {
+                alert("✅ Produit supprimé !");
+                loadProducts();
+            } else {
+                alert("Erreur lors de la suppression.");
+            }
+        } catch (err) {
+            console.error("Erreur suppression :", err);
+        }
+    };
+
+    // 🔹 Initialisation
+    loadCategories();
+    loadProducts();
 });
-
-// 🔹 Notification
-function showNotification(message, type = 'info') {
-    // Implémentez votre système de notification ici
-    alert(message); // Temporaire - à remplacer par un vrai système de notifications
-}
-
-// Charger les catégories au démarrage
-document.addEventListener('DOMContentLoaded', loadCategories);
 </script>
+{% endblock %}
+{% block extra_css %}
 
 <style>
 .category-avatar {
