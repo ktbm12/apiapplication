@@ -124,14 +124,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // 🔹 Ajouter un produit
     productForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-      const data = {
-    title: document.getElementById("name").value.trim(),
-    description: document.getElementById("description").value.trim(),
-    price: parseFloat(document.getElementById("price").value),
-    stock: parseInt(document.getElementById("stock").value),
-    category: document.getElementById("category").value  // <-- garder en texte (UUID)
-};
-
+        const data = {
+            title: document.getElementById("title").value.trim(),
+            description: document.getElementById("description").value.trim(),
+            price: parseFloat(document.getElementById("price").value),
+            stock: parseInt(document.getElementById("stock").value),
+             category: document.getElementById("category").value  
+        };
 
         // ✅ Vérification correcte
         if (!data.title || !data.category) {
