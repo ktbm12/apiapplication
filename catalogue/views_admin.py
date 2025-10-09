@@ -11,5 +11,9 @@ def admin_categories(request):
     return render(request, "dashboard/categorie.html")
 
 @staff_member_required
-def admin_produits(request):
-    return render(request, "catalogue/produits.html")
+def admin_products(request):
+    return render(request, "dashboard/product.html")
+
+@staff_member_required
+def admin_images(request):
+    return render(request, "dashboard/images.html")

@@ -1,191 +1,669 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
 
+{% block title %}Gestion des Produits | LuxeShop{% endblock %}
+
 {% block content %}
-<div class="admin-page p-6">
-    <h1 class="text-3xl font-bold mb-4">Gestion des Produits</h1>
-
-    <!-- Formulaire d'ajout -->
-    <div class="bg-white p-4 rounded shadow mb-6">
-        <h2 class="text-xl font-semibold mb-2">Ajouter un produit</h2>
-        <form id="productForm" class="grid grid-cols-2 gap-3">
-            {% csrf_token %}
-            <input type="text" id="title" placeholder="Nom du produit" required class="border p-2 rounded">
-            <input type="number" id="price" placeholder="Prix" step="0.01" required class="border p-2 rounded">
-            <input type="number" id="stock" placeholder="Stock" required class="border p-2 rounded">
-            <select id="category" required class="border p-2 rounded">
-                <option value="">Sélectionnez une catégorie</option>
-            </select>
-            <textarea id="description" placeholder="Description" class="border p-2 col-span-2 rounded"></textarea>
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 col-span-2">
-                Ajouter le produit
-            </button>
-        </form>
+<!-- En-tête de page -->
+<div class="page-header">
+    <div class="page-title">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestion des Produits</h1>
+        <p class="text-gray-600">Gérez votre catalogue de produits et leur inventaire</p>
     </div>
-
-    <!-- Tableau des produits -->
-    <div class="bg-white p-4 rounded shadow">
-        <h2 class="text-xl font-semibold mb-3">Liste des produits</h2>
-        <table class="w-full border-collapse border border-gray-200">
-            <thead>
-                <tr class="bg-gray-100 text-left">
-                    <th class="border p-2">ID</th>
-                    <th class="border p-2">Titre</th>
-                    <th class="border p-2">Catégorie</th>
-                    <th class="border p-2">Prix</th>
-                    <th class="border p-2">Stock</th>
-                    <th class="border p-2">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="productsTable">
-                <tr><td colspan="6" class="text-center p-3 text-gray-500">Chargement...</td></tr>
-            </tbody>
-        </table>
+    
+    <div class="page-actions">
+        <button class="btn-primary" onclick="showAddForm()">
+            <i class="fas fa-plus mr-2"></i> Nouveau Produit
+        </button>
+        <button class="btn-secondary" onclick="exportProducts()">
+            <i class="fas fa-download mr-2"></i> Exporter
+        </button>
     </div>
 </div>
 
-<script>
-// ✅ Récupération du cookie CSRF
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
-        for (let cookie of cookies) {
-            cookie = cookie.trim();
-            if (cookie.startsWith(name + "=")) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-const csrftoken = getCookie("csrftoken");
+<!-- Cartes de Statistiques -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon bg-blue-500">
+                <i class="fas fa-box"></i>
+            </div>
+            <div class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                +12.5%
+            </div>
+        </div>
+        <div class="stat-value" id="totalProducts">0</div>
+        <div class="stat-label">Produits total</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon bg-green-500">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                +8.2%
+            </div>
+        </div>
+        <div class="stat-value" id="activeProducts">0</div>
+        <div class="stat-label">Produits actifs</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon bg-yellow-500">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-trend trend-down">
+                <i class="fas fa-arrow-down"></i>
+                -2.1%
+            </div>
+        </div>
+        <div class="stat-value" id="lowStockProducts">0</div>
+        <div class="stat-label">Stock faible</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon bg-purple-500">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                +15.3%
+            </div>
+        </div>
+        <div class="stat-value" id="totalValue">0€</div>
+        <div class="stat-label">Valeur totale</div>
+    </div>
+</div>
 
-document.addEventListener("DOMContentLoaded", () => {
-    const BASE_URL = "http://127.0.0.1:9000/api/catalogue/";
-    const PRODUCTS_URL = `${BASE_URL}products/`;
-    const CATEGORIES_URL = `${BASE_URL}categories/`;
+<!-- Formulaire d'ajout -->
+<div class="form-card" id="addForm" style="display: none;">
+    <div class="form-header">
+        <h3 class="form-title">Ajouter un nouveau produit</h3>
+        <button class="btn-close" onclick="hideAddForm()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    
+    <form id="productForm" class="admin-form">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group">
+                <label for="title" class="form-label">
+                    <i class="fas fa-tag mr-2"></i>Nom du produit *
+                </label>
+                <input type="text" id="title" name="title" required class="form-input" 
+                       placeholder="Ex: iPhone 15 Pro Max">
+            </div>
+            
+            <div class="form-group">
+                <label for="price" class="form-label">
+                    <i class="fas fa-euro-sign mr-2"></i>Prix *
+                </label>
+                <input type="number" id="price" name="price" step="0.01" required 
+                       class="form-input" placeholder="0.00">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="stock" class="form-label">
+                    <i class="fas fa-boxes mr-2"></i>Stock *
+                </label>
+                <input type="number" id="stock" name="stock" required 
+                       class="form-input" placeholder="0">
+            </div>
+            
+            <div class="form-group">
+                <label for="category" class="form-label">
+                    <i class="fas fa-list mr-2"></i>Catégorie *
+                </label>
+                <select id="category" name="category" required class="form-select">
+                    <option value="">Sélectionnez une catégorie</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="description" class="form-label">
+                <i class="fas fa-align-left mr-2"></i>Description
+            </label>
+            <textarea id="description" name="description" class="form-textarea" 
+                      rows="4" placeholder="Description détaillée du produit..."></textarea>
+        </div>
+        
+        <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="hideAddForm()">
+                <i class="fas fa-times mr-2"></i>Annuler
+            </button>
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-plus mr-2"></i>Ajouter le produit
+            </button>
+        </div>
+    </form>
+</div>
 
-    const productForm = document.getElementById("productForm");
-    const tableBody = document.getElementById("productsTable");
-    const categorySelect = document.getElementById("category");
+<!-- Tableau des produits -->
+<div class="table-card">
+    <div class="table-header">
+        <h3 class="table-title">Liste des produits</h3>
+        <div class="table-actions">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Rechercher un produit...">
+            </div>
+            <button class="btn-secondary btn-sm" onclick="loadProducts()">
+                <i class="fas fa-refresh mr-2"></i>Actualiser
+            </button>
+        </div>
+    </div>
+    
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Produit</th>
+                    <th>Catégorie</th>
+                    <th>Prix</th>
+                    <th>Stock</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="productsTable">
+                <tr>
+                    <td colspan="7" class="text-center">
+                        <div class="loading-state">
+                            <i class="fas fa-spinner fa-spin mr-2"></i>
+                            <span>Chargement des produits...</span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="table-footer">
+        <div class="table-info">
+            Affichage de <span id="showingCount">0</span> sur <span id="totalCount">0</span> produits
+        </div>
+        <div class="table-pagination">
+            <button class="btn-secondary btn-sm" id="prevBtn" disabled>
+                <i class="fas fa-chevron-left mr-1"></i>Précédent
+            </button>
+            <span class="pagination-info">Page <span id="currentPage">1</span></span>
+            <button class="btn-secondary btn-sm" id="nextBtn" disabled>
+                Suivant<i class="fas fa-chevron-right ml-1"></i>
+            </button>
+        </div>
+    </div>
+</div>
 
-    // 🔹 Charger les catégories
-    async function loadCategories() {
-        try {
-            const res = await fetch(CATEGORIES_URL);
-            const categories = await res.json();
-            categorySelect.innerHTML = '<option value="">Sélectionnez une catégorie</option>';
-            categories.forEach(cat => {
-                categorySelect.insertAdjacentHTML('beforeend', `<option value="${cat.id}">${cat.name}</option>`);
-            });
-        } catch (err) {
-            console.error("Erreur chargement catégories :", err);
-        }
-    }
+<!-- Graphiques -->
+<div class="charts-grid">
+    <div class="chart-card">
+        <div class="chart-header">
+            <h3>Répartition par Catégorie</h3>
+            <div class="chart-actions">
+                <select class="chart-period" onchange="updateCategoryChart()">
+                    <option>Tous les produits</option>
+                    <option>Produits en stock</option>
+                    <option>Produits vendus</option>
+                </select>
+            </div>
+        </div>
+        <div class="chart-container">
+            <canvas id="categoryChart"></canvas>
+        </div>
+    </div>
 
-    // 🔹 Charger les produits
-    async function loadProducts() {
-        tableBody.innerHTML = '<tr><td colspan="6" class="text-center p-3 text-gray-500">Chargement...</td></tr>';
-        try {
-            const res = await fetch(PRODUCTS_URL);
-            const products = await res.json();
+    <div class="chart-card">
+        <div class="chart-header">
+            <h3>Évolution des Prix</h3>
+        </div>
+        <div class="chart-container">
+            <canvas id="priceChart"></canvas>
+        </div>
+    </div>
+</div>
 
-            if (!Array.isArray(products) || products.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="6" class="text-center p-3 text-gray-500">Aucun produit trouvé.</td></tr>';
-                return;
-            }
+<!-- Activité Récente -->
+<div class="activity-card">
+    <div class="chart-header">
+        <h3>Activité Récente des Produits</h3>
+    </div>
+    <div class="activity-list" id="productActivity">
+        <div class="activity-item">
+            <div class="activity-icon product">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+            <div class="activity-content">
+                <div class="activity-text">Chargement des activités...</div>
+                <div class="activity-time">--</div>
+            </div>
+        </div>
+    </div>
+</div>
 
-            tableBody.innerHTML = "";
-            products.forEach(prod => {
-                const row = `
-                    <tr>
-                        <td class="border p-2">${prod.id}</td>
-                        <td class="border p-2">${prod.title}</td>
-                        <td class="border p-2">${prod.category_name || "-"}</td>
-                        <td class="border p-2">${prod.price} FCFA</td>
-                        <td class="border p-2">${prod.stock}</td>
-                        <td class="border p-2 text-center">
-                            <button onclick="deleteProduct(${prod.id})" 
-                                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-                                Supprimer
-                            </button>
-                        </td>
-                    </tr>`;
-                tableBody.insertAdjacentHTML("beforeend", row);
-            });
-        } catch (err) {
-            console.error("Erreur chargement produits :", err);
-            tableBody.innerHTML = '<tr><td colspan="6" class="text-center p-3 text-red-500">Erreur de chargement</td></tr>';
-        }
-    }
+<!-- Modal de confirmation de suppression -->
+<div class="modal-overlay" id="deleteModal" style="display: none;">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Confirmer la suppression</h3>
+            <button class="btn-close" onclick="closeDeleteModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Êtes-vous sûr de vouloir supprimer le produit "<strong id="deleteProductName"></strong>" ?</p>
+            <p class="text-warning">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                Cette action est irréversible et supprimera définitivement le produit.
+            </p>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-secondary" onclick="closeDeleteModal()">Annuler</button>
+            <button class="btn-danger" id="confirmDeleteBtn">
+                <i class="fas fa-trash mr-2"></i>Supprimer définitivement
+            </button>
+        </div>
+    </div>
+</div>
 
-    // 🔹 Ajouter un produit
-    productForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const data = {
-            title: document.getElementById("title").value.trim(),
-            description: document.getElementById("description").value.trim(),
-            price: parseFloat(document.getElementById("price").value),
-            stock: parseInt(document.getElementById("stock").value),
-             category: document.getElementById("category").value  
-        };
+<!-- Template pour le skeleton loading -->
+<template id="row-skeleton">
+    <tr>
+        <td><div class="skeleton h-4 w-8"></div></td>
+        <td><div class="skeleton h-4 w-32"></div></td>
+        <td><div class="skeleton h-4 w-24"></div></td>
+        <td><div class="skeleton h-4 w-16"></div></td>
+        <td><div class="skeleton h-4 w-12"></div></td>
+        <td><div class="skeleton h-4 w-20"></div></td>
+        <td><div class="skeleton h-4 w-20"></div></td>
+    </tr>
+</template>
 
-        // ✅ Vérification correcte
-        if (!data.title || !data.category) {
-            alert("Veuillez remplir tous les champs obligatoires.");
-            return;
-        }
-
-        try {
-            const res = await fetch(PRODUCTS_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": csrftoken,
-                },
-                body: JSON.stringify(data),
-            });
-
-            if (res.ok) {
-                alert("✅ Produit ajouté avec succès !");
-                productForm.reset();
-                await loadProducts();
-            } else {
-                const err = await res.json();
-                alert("Erreur : " + JSON.stringify(err));
-            }
-        } catch (err) {
-            console.error("Erreur d’ajout :", err);
-            alert("Erreur lors de l’ajout du produit.");
-        }
-    });
-
-    // 🔹 Supprimer un produit
-    window.deleteProduct = async (id) => {
-        if (!confirm("Supprimer ce produit ?")) return;
-        try {
-            const res = await fetch(`${PRODUCTS_URL}${id}/`, {
-                method: "DELETE",
-                headers: { "X-CSRFToken": csrftoken },
-            });
-            if (res.ok) {
-                alert("✅ Produit supprimé !");
-                loadProducts();
-            } else {
-                alert("Erreur lors de la suppression.");
-            }
-        } catch (err) {
-            console.error("Erreur suppression :", err);
-        }
-    };
-
-    // Initialisation
-    loadCategories();
-    loadProducts();
-});
-</script>
-
+<!-- Load dashboard-specific JS -->
+<script src="{% static 'js/dashboard_product.js' %}"></script>
+<script src="{% static 'js/debug_charts.js' %}"></script>
 {% endblock %}
-{% load static %}
+
+{% block extra_css %}
+<style>
+/* Styles personnalisés pour la gestion des produits avec Tailwind CSS */
+
+/* Boutons personnalisés */
+.btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg;
+}
+
+.btn-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-all duration-200 border border-gray-300;
+}
+
+.btn-danger {
+    @apply bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200;
+}
+
+.btn-sm {
+    @apply py-1.5 px-3 text-sm;
+}
+
+.btn-close {
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 p-2 rounded-full transition-all duration-200;
+}
+
+/* Cartes et conteneurs */
+.form-card {
+    @apply bg-white rounded-xl shadow-lg border border-gray-100 mb-6 overflow-hidden;
+}
+
+.form-header {
+    @apply bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 flex justify-between items-center;
+}
+
+.form-title {
+    @apply text-xl font-semibold;
+}
+
+.table-card {
+    @apply bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden;
+}
+
+.table-header {
+    @apply bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center;
+}
+
+.table-title {
+    @apply text-lg font-semibold text-gray-900;
+}
+
+.table-actions {
+    @apply flex items-center gap-4;
+}
+
+.table-container {
+    @apply overflow-x-auto;
+}
+
+.data-table {
+    @apply w-full;
+}
+
+.data-table th {
+    @apply bg-gray-50 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200;
+}
+
+.data-table td {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-b border-gray-200;
+}
+
+.table-footer {
+    @apply bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-between items-center;
+}
+
+.table-info {
+    @apply text-sm text-gray-600;
+}
+
+.table-pagination {
+    @apply flex items-center gap-2;
+}
+
+.pagination-info {
+    @apply text-sm text-gray-600 px-3;
+}
+
+/* Formulaire */
+.admin-form {
+    @apply p-6;
+}
+
+.form-row {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6 mb-6;
+}
+
+.form-group {
+    @apply flex flex-col;
+}
+
+.form-label {
+    @apply text-sm font-medium text-gray-700 mb-2 flex items-center;
+}
+
+.form-input, .form-select, .form-textarea {
+    @apply border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200;
+}
+
+.form-textarea {
+    @apply resize-vertical min-h-[100px];
+}
+
+.form-actions {
+    @apply flex gap-4 justify-end pt-6 border-t border-gray-200;
+}
+
+/* Statistiques */
+.stats-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8;
+}
+
+.stat-card {
+    @apply bg-white rounded-xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
+}
+
+.stat-header {
+    @apply flex justify-between items-center mb-4;
+}
+
+.stat-icon {
+    @apply w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl;
+}
+
+.stat-trend {
+    @apply flex items-center gap-1 text-sm font-semibold;
+}
+
+.trend-up {
+    @apply text-green-600;
+}
+
+.trend-down {
+    @apply text-red-600;
+}
+
+.stat-value {
+    @apply text-3xl font-bold text-gray-900 mb-1;
+}
+
+.stat-label {
+    @apply text-sm text-gray-600;
+}
+
+/* Barre de recherche */
+.search-bar {
+    @apply relative;
+}
+
+.search-bar input {
+    @apply pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64;
+}
+
+.search-bar i {
+    @apply absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400;
+}
+
+/* Graphiques */
+.charts-grid {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8;
+}
+
+.chart-card {
+    @apply bg-white rounded-xl shadow-lg border border-gray-100 p-6;
+}
+
+.chart-header {
+    @apply flex justify-between items-center mb-6;
+}
+
+.chart-header h3 {
+    @apply text-lg font-semibold text-gray-900;
+}
+
+.chart-actions {
+    @apply flex gap-2;
+}
+
+.chart-period {
+    @apply border border-gray-300 rounded-lg px-3 py-1 text-sm bg-white;
+}
+
+.chart-container {
+    @apply relative h-80;
+}
+
+/* Activité */
+.activity-card {
+    @apply bg-white rounded-xl shadow-lg border border-gray-100 p-6;
+}
+
+.activity-list {
+    @apply space-y-4 max-h-96 overflow-y-auto;
+}
+
+.activity-item {
+    @apply flex items-center gap-4 p-4 bg-gray-50 rounded-lg;
+}
+
+.activity-icon {
+    @apply w-10 h-10 rounded-full flex items-center justify-center text-white;
+}
+
+.activity-icon.product {
+    @apply bg-blue-500;
+}
+
+.activity-content {
+    @apply flex-1;
+}
+
+.activity-text {
+    @apply text-sm text-gray-900 mb-1;
+}
+
+.activity-time {
+    @apply text-xs text-gray-500;
+}
+
+/* États */
+.loading-state, .error-state, .empty-state {
+    @apply flex items-center justify-center gap-3 py-12 text-gray-500;
+}
+
+.error-state {
+    @apply text-red-500;
+}
+
+.empty-state {
+    @apply text-gray-500;
+}
+
+.text-center {
+    @apply text-center;
+}
+
+.text-warning {
+    @apply text-yellow-600;
+}
+
+/* Skeleton loading */
+.skeleton {
+    @apply bg-gray-200 rounded animate-pulse;
+}
+
+/* Modal */
+.modal-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal {
+    @apply bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto;
+}
+
+.modal-header {
+    @apply px-6 py-4 border-b border-gray-200 flex justify-between items-center;
+}
+
+.modal-header h3 {
+    @apply text-lg font-semibold text-gray-900;
+}
+
+.modal-body {
+    @apply px-6 py-4;
+}
+
+.modal-actions {
+    @apply px-6 py-4 border-t border-gray-200 flex gap-3 justify-end;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-row {
+        @apply grid-cols-1;
+    }
+    
+    .form-actions {
+        @apply flex-col;
+    }
+    
+    .table-header {
+        @apply flex-col gap-4;
+    }
+    
+    .table-actions {
+        @apply w-full justify-between;
+    }
+    
+    .search-bar input {
+        @apply w-full;
+    }
+    
+    .stats-grid {
+        @apply grid-cols-1 sm:grid-cols-2;
+    }
+    
+    .charts-grid {
+        @apply grid-cols-1;
+    }
+    
+    .table-footer {
+        @apply flex-col gap-4;
+    }
+    
+    .modal {
+        @apply mx-2;
+    }
+}
+
+@media (max-width: 640px) {
+    .stats-grid {
+        @apply grid-cols-1;
+    }
+    
+    .stat-card {
+        @apply p-4;
+    }
+    
+    .stat-value {
+        @apply text-2xl;
+    }
+    
+    .chart-container {
+        @apply h-64;
+    }
+}
+
+/* Animations personnalisées */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* États de statut */
+.status-active {
+    @apply bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.status-inactive {
+    @apply bg-red-100 text-red-800 px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.status-low-stock {
+    @apply bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+/* Hover effects */
+.hover-lift {
+    @apply transition-transform duration-200 hover:-translate-y-1;
+}
+
+.hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+}
+</style>
+{% endblock %}

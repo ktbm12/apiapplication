@@ -1,10 +1,8 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from django.views.decorators.csrf import csrf_exempt
-from .views import CategoryViewSet, ProductViewSet, ProductImageViewSet
 from django.urls.resolvers import URLPattern, URLResolver
-from rest_framework.routers import DefaultRouter
-from .views import CategoryViewSet, ProductViewSet, ProductImageViewSet
+from .views_api import CategoryViewSet, ProductViewSet, ProductImageViewSet
 
 router = DefaultRouter()
 router.register(r'categories', CategoryViewSet, basename='category')

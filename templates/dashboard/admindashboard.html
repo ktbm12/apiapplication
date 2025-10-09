@@ -81,7 +81,7 @@
 </div>
 
 <!-- Formulaire d'ajout -->
-<div class="table-card" id="addForm" style="display: none; margin-bottom: 30px;">
+<div class="table-card add-form-card" id="addForm" style="display: none;">
     <div class="table-header">
         <h3>Ajouter une nouvelle catégorie</h3>
         <div class="table-actions">
@@ -116,14 +116,14 @@
 </div>
 
 <!-- Tableau des catégories -->
-<div class="table-card" style="margin-bottom: 30px;">
+<div class="table-card categories-table-card">
     <div class="table-header">
         <h3>Liste des catégories</h3>
         <div class="table-actions">
-            <div class="search-bar" style="margin-bottom: 0;">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Rechercher une catégorie...">
-            </div>
+        <div class="search-bar table-search">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Rechercher une catégorie...">
+        </div>
             <button class="btn btn-sm" onclick="loadCategories()">
                 <i class="fas fa-refresh"></i> Actualiser
             </button>
@@ -385,17 +385,17 @@ function renderCategoriesTable(categories) {
         <tr>
             <td><strong>#${cat.id}</strong></td>
             <td>
-                <div style="display: flex; align-items: center; gap: 12px;">
+                <div class="category-info">
                     <div class="category-avatar">
                         <i class="fas fa-tag"></i>
                     </div>
-                    <div>
-                        <div style="font-weight: 600;">${cat.name}</div>
-                        <div style="font-size: 12px; color: #6c757d;">ID: ${cat.id}</div>
+                    <div class="category-details">
+                        <div class="category-name">${cat.name}</div>
+                        <div class="category-id">ID: ${cat.id}</div>
                     </div>
                 </div>
             </td>
-            <td>${cat.description || '<span style="color: #6c757d; font-style: italic;">Aucune description</span>'}</td>
+            <td>${cat.description || '<span class="no-description">Aucune description</span>'}</td>
             <td>
                 <span class="product-count">${cat.product_count || 0}</span>
             </td>
@@ -406,7 +406,7 @@ function renderCategoriesTable(categories) {
                 </span>
             </td>
             <td>
-                <div style="display: flex; gap: 8px; justify-content: center;">
+                <div class="action-buttons">
                     <button class="btn btn-sm btn-outline" onclick="editCategory(${cat.id})" title="Modifier">
                         <i class="fas fa-edit"></i>
                     </button>
@@ -745,6 +745,40 @@ window.currentCharts = [];
 </script>
 
 <style>
+/* Styles spécifiques pour la gestion des catégories */
+
+/* Cartes et conteneurs */
+.add-form-card {
+    margin-bottom: 30px;
+}
+
+.categories-table-card {
+    margin-bottom: 30px;
+}
+
+/* Informations de catégorie */
+.category-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.category-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.category-name {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 2px;
+}
+
+.category-id {
+    font-size: 12px;
+    color: var(--text-light);
+}
+
 .category-avatar {
     width: 40px;
     height: 40px;
@@ -755,8 +789,16 @@ window.currentCharts = [];
     align-items: center;
     justify-content: center;
     font-size: 16px;
+    flex-shrink: 0;
 }
 
+/* Description */
+.no-description {
+    color: var(--text-light);
+    font-style: italic;
+}
+
+/* Compteur de produits */
 .product-count {
     background: #f8f9fa;
     color: #495057;
@@ -765,28 +807,50 @@ window.currentCharts = [];
     font-size: 14px;
     font-weight: 600;
     border: 1px solid #e9ecef;
+    display: inline-block;
 }
 
+/* Boutons d'action */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Barre de recherche dans le tableau */
+.table-search {
+    margin-bottom: 0;
+    width: 250px;
+}
+
+/* États d'affichage */
 .loading-state, .error-state, .empty-state {
     display: flex;
     align-items: center;
     gap: 12px;
     justify-content: center;
     padding: 40px 20px;
-    color: #6c757d;
+    color: var(--text-light);
 }
 
 .error-state {
-    color: #e53e3e;
+    color: var(--secondary-color);
 }
 
 .empty-state {
-    color: #6c757d;
+    color: var(--text-light);
 }
 
-.text-center { text-align: center; }
-.text-warning { color: #dd6b20; }
+.text-center { 
+    text-align: center; 
+}
 
+.text-warning { 
+    color: var(--warning-color); 
+}
+
+/* Formulaire d'administration */
 .admin-form {
     padding: 20px;
 }
@@ -806,7 +870,7 @@ window.currentCharts = [];
 .form-group label {
     font-weight: 600;
     margin-bottom: 8px;
-    color: #2d3748;
+    color: var(--primary-color);
 }
 
 .form-input, .form-textarea {
@@ -815,12 +879,18 @@ window.currentCharts = [];
     border-radius: 6px;
     font-size: 14px;
     transition: all 0.3s ease;
+    background: white;
 }
 
 .form-input:focus, .form-textarea:focus {
     outline: none;
-    border-color: #3498db;
+    border-color: var(--accent-color);
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
 }
 
 .form-actions {
@@ -831,6 +901,7 @@ window.currentCharts = [];
     border-top: 1px solid #e2e8f0;
 }
 
+/* Système de notifications */
 .notification {
     position: fixed;
     top: 20px;
@@ -839,12 +910,13 @@ window.currentCharts = [];
     padding: 16px 20px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-left: 4px solid #3498db;
+    border-left: 4px solid var(--accent-color);
     transform: translateX(400px);
     opacity: 0;
     transition: all 0.3s ease;
     z-index: 10000;
     min-width: 300px;
+    max-width: 400px;
 }
 
 .notification.show {
@@ -853,11 +925,11 @@ window.currentCharts = [];
 }
 
 .notification-success {
-    border-left-color: #27ae60;
+    border-left-color: var(--success-color);
 }
 
 .notification-error {
-    border-left-color: #e74c3c;
+    border-left-color: var(--secondary-color);
 }
 
 .notification-content {
@@ -871,37 +943,91 @@ window.currentCharts = [];
 }
 
 .notification-success .notification-content i {
-    color: #27ae60;
+    color: var(--success-color);
 }
 
 .notification-error .notification-content i {
-    color: #e74c3c;
+    color: var(--secondary-color);
 }
 
+/* Boutons */
 .btn-danger {
-    background: #e74c3c;
+    background: var(--secondary-color);
     color: white;
     border: none;
 }
 
 .btn-danger:hover {
     background: #c0392b;
+    transform: translateY(-2px);
 }
 
 .btn-close {
     background: none;
     border: none;
-    color: #6c757d;
+    color: var(--text-light);
     cursor: pointer;
     padding: 8px;
     border-radius: 4px;
+    transition: var(--transition);
 }
 
 .btn-close:hover {
     background: #f8f9fa;
-    color: #495057;
+    color: var(--primary-color);
 }
 
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.modal {
+    background: white;
+    border-radius: 12px;
+    padding: 0;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--primary-color);
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-actions {
+    padding: 20px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
     .form-row {
         grid-template-columns: 1fr;
@@ -909,6 +1035,70 @@ window.currentCharts = [];
     
     .form-actions {
         flex-direction: column;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .category-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .category-avatar {
+        align-self: center;
+    }
+    
+    .table-search {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    .notification {
+        right: 10px;
+        left: 10px;
+        min-width: auto;
+        max-width: none;
+    }
+    
+    .modal {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    .modal-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-form {
+        padding: 15px;
+    }
+    
+    .form-group label {
+        font-size: 14px;
+    }
+    
+    .form-input, .form-textarea {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .category-name {
+        font-size: 14px;
+    }
+    
+    .category-id {
+        font-size: 11px;
+    }
+    
+    .product-count {
+        font-size: 12px;
+        padding: 3px 8px;
     }
 }
 </style>

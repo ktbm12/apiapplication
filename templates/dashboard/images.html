@@ -1,0 +1,336 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Gestion des Images | LuxeShop{% endblock %}
+
+{% block content %}
+<!-- En-tête de page -->
+<div class="page-header">
+    <div class="page-title">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestion des Images</h1>
+        <p class="text-gray-600">Gérez les images de vos produits</p>
+    </div>
+    
+    <div class="page-actions">
+        <button class="btn-primary" onclick="showAddImageForm()">
+            <i class="fas fa-plus mr-2"></i> Ajouter des Images
+        </button>
+        <button class="btn-secondary" onclick="refreshImages()">
+            <i class="fas fa-refresh mr-2"></i> Actualiser
+        </button>
+    </div>
+</div>
+
+<!-- Cartes de Statistiques -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon bg-blue-500">
+                <i class="fas fa-images"></i>
+            </div>
+            <div class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                +15.2%
+            </div>
+        </div>
+        <div class="stat-value" id="totalImages">0</div>
+        <div class="stat-label">Images totales</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon bg-green-500">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                +8.1%
+            </div>
+        </div>
+        <div class="stat-value" id="mainImages">0</div>
+        <div class="stat-label">Images principales</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon bg-purple-500">
+                <i class="fas fa-box"></i>
+            </div>
+            <div class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                +12.3%
+            </div>
+        </div>
+        <div class="stat-value" id="productsWithImages">0</div>
+        <div class="stat-label">Produits avec images</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-header">
+            <div class="stat-icon bg-yellow-500">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-trend trend-down">
+                <i class="fas fa-arrow-down"></i>
+                -3.2%
+            </div>
+        </div>
+        <div class="stat-value" id="productsWithoutImages">0</div>
+        <div class="stat-label">Produits sans images</div>
+    </div>
+</div>
+
+<!-- Formulaire d'ajout d'images -->
+<div class="form-card" id="addImageForm" style="display: none;">
+    <div class="form-header">
+        <h3 class="form-title">Ajouter des images</h3>
+        <button class="btn-close" onclick="hideAddImageForm()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    
+    <form id="imageUploadForm" class="admin-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="productSelect" class="form-label">
+                <i class="fas fa-box mr-2"></i>Sélectionner un produit *
+            </label>
+            <select id="productSelect" name="product" required class="form-select">
+                <option value="">Choisir un produit...</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="imageFiles" class="form-label">
+                <i class="fas fa-images mr-2"></i>Sélectionner les images *
+            </label>
+            <input type="file" id="imageFiles" name="images" multiple accept="image/*" required 
+                   class="form-input" onchange="previewImages(this)">
+            <div class="text-sm text-gray-500 mt-1">
+                Formats acceptés: JPG, PNG, GIF, WebP. Taille max: 5MB par image.
+            </div>
+        </div>
+        
+        <div id="imagePreview" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4" style="display: none;">
+            <!-- Prévisualisation des images -->
+        </div>
+        
+        <div class="form-group">
+            <label for="altText" class="form-label">
+                <i class="fas fa-align-left mr-2"></i>Texte alternatif (optionnel)
+            </label>
+            <input type="text" id="altText" name="alt_text" class="form-input" 
+                   placeholder="Description de l'image pour l'accessibilité">
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">
+                <i class="fas fa-star mr-2"></i>Image principale
+            </label>
+            <div class="flex items-center">
+                <input type="checkbox" id="isMain" name="is_main" class="mr-2">
+                <label for="isMain" class="text-sm text-gray-700">
+                    Définir comme image principale du produit
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="hideAddImageForm()">
+                <i class="fas fa-times mr-2"></i>Annuler
+            </button>
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-upload mr-2"></i>Uploader les images
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Filtres et recherche -->
+<div class="table-card">
+    <div class="table-header">
+        <h3 class="table-title">Images des produits</h3>
+        <div class="table-actions">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Rechercher par produit...">
+            </div>
+            <select id="productFilter" class="form-select">
+                <option value="">Tous les produits</option>
+            </select>
+            <button class="btn-secondary btn-sm" onclick="loadImages()">
+                <i class="fas fa-refresh mr-2"></i>Actualiser
+            </button>
+        </div>
+    </div>
+    
+    <!-- Grille des images -->
+    <div class="images-grid" id="imagesGrid">
+        <div class="loading-state">
+            <i class="fas fa-spinner fa-spin mr-2"></i>
+            <span>Chargement des images...</span>
+        </div>
+    </div>
+    
+    <div class="table-footer">
+        <div class="table-info">
+            Affichage de <span id="showingCount">0</span> sur <span id="totalCount">0</span> images
+        </div>
+        <div class="table-pagination">
+            <button class="btn-secondary btn-sm" id="prevBtn" disabled>
+                <i class="fas fa-chevron-left mr-1"></i>Précédent
+            </button>
+            <span class="pagination-info">Page <span id="currentPage">1</span></span>
+            <button class="btn-secondary btn-sm" id="nextBtn" disabled>
+                Suivant<i class="fas fa-chevron-right ml-1"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+<div class="modal-overlay" id="deleteModal" style="display: none;">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Confirmer la suppression</h3>
+            <button class="btn-close" onclick="closeDeleteModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Êtes-vous sûr de vouloir supprimer cette image ?</p>
+            <p class="text-warning">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                Cette action est irréversible.
+            </p>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-secondary" onclick="closeDeleteModal()">Annuler</button>
+            <button class="btn-danger" id="confirmDeleteBtn">
+                <i class="fas fa-trash mr-2"></i>Supprimer définitivement
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Load dashboard-specific JS -->
+<script src="{% static 'js/dashboard_images.js' %}"></script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Styles spécifiques pour la gestion des images */
+
+/* Grille des images */
+.images-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6;
+}
+
+.image-card {
+    @apply bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1;
+}
+
+.image-container {
+    @apply relative aspect-square overflow-hidden;
+}
+
+.image-container img {
+    @apply w-full h-full object-cover;
+}
+
+.image-overlay {
+    @apply absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 flex items-center justify-center;
+}
+
+.image-card:hover .image-overlay {
+    @apply opacity-100;
+}
+
+.image-actions {
+    @apply flex gap-2;
+}
+
+.image-info {
+    @apply p-4;
+}
+
+.image-title {
+    @apply font-semibold text-gray-900 mb-1 truncate;
+}
+
+.image-product {
+    @apply text-sm text-gray-600 mb-2;
+}
+
+.image-meta {
+    @apply flex justify-between items-center text-xs text-gray-500;
+}
+
+.image-status {
+    @apply px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.status-main {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+.status-secondary {
+    @apply bg-gray-100 text-gray-800;
+}
+
+/* Prévisualisation des images */
+.image-preview {
+    @apply relative bg-gray-100 rounded-lg overflow-hidden;
+}
+
+.image-preview img {
+    @apply w-full h-32 object-cover;
+}
+
+.image-preview-remove {
+    @apply absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center cursor-pointer hover:bg-red-600;
+}
+
+/* Upload progress */
+.upload-progress {
+    @apply w-full bg-gray-200 rounded-full h-2 mb-2;
+}
+
+.upload-progress-bar {
+    @apply bg-blue-600 h-2 rounded-full transition-all duration-300;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .images-grid {
+        @apply grid-cols-1 sm:grid-cols-2;
+    }
+    
+    .form-actions {
+        @apply flex-col;
+    }
+    
+    .table-header {
+        @apply flex-col gap-4;
+    }
+    
+    .table-actions {
+        @apply w-full justify-between;
+    }
+    
+    .search-bar input {
+        @apply w-full;
+    }
+}
+
+@media (max-width: 640px) {
+    .images-grid {
+        @apply grid-cols-1;
+    }
+    
+    .image-container {
+        @apply aspect-video;
+    }
+}
+</style>
+{% endblock %}

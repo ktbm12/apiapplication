@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test des Graphiques</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            max-width: 600px;
+        }
+        .chart-container h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        canvas {
+            max-height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test des Graphiques Chart.js</h1>
+    
+    <div class="chart-container">
+        <h3>Graphique en Donut - Répartition par Catégorie</h3>
+        <canvas id="categoryChart" width="400" height="200"></canvas>
+    </div>
+    
+    <div class="chart-container">
+        <h3>Graphique en Barres - Évolution des Prix</h3>
+        <canvas id="priceChart" width="400" height="200"></canvas>
+    </div>
+
+    <script>
+        // Vérifier que Chart.js est chargé
+        console.log('Chart.js version:', Chart.version);
+        
+        // Données de test
+        const testProducts = [
+            { title: "iPhone 15 Pro Max", price: 1199.99, category_name: "Électronique" },
+            { title: "MacBook Pro M3", price: 2499.99, category_name: "Électronique" },
+            { title: "Nike Air Max", price: 129.99, category_name: "Mode" },
+            { title: "Samsung Galaxy S24", price: 899.99, category_name: "Électronique" },
+            { title: "Adidas T-Shirt", price: 29.99, category_name: "Mode" },
+            { title: "Sony WH-1000XM5", price: 399.99, category_name: "Électronique" },
+            { title: "Levi's Jeans", price: 89.99, category_name: "Mode" },
+            { title: "iPad Air", price: 599.99, category_name: "Électronique" }
+        ];
+
+        // Graphique de répartition par catégorie
+        const categoryData = {};
+        testProducts.forEach(product => {
+            const category = product.category_name || 'Non catégorisé';
+            categoryData[category] = (categoryData[category] || 0) + 1;
+        });
+
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(categoryData),
+                datasets: [{
+                    data: Object.values(categoryData),
+                    backgroundColor: [
+                        '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6',
+                        '#06B6D4', '#84CC16', '#F97316', '#EC4899', '#6B7280'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+
+        // Graphique d'évolution des prix
+        const sortedProducts = testProducts.sort((a, b) => a.price - b.price).slice(0, 6);
+        const priceCtx = document.getElementById('priceChart').getContext('2d');
+        new Chart(priceCtx, {
+            type: 'bar',
+            data: {
+                labels: sortedProducts.map(p => p.title.substring(0, 15) + '...'),
+                datasets: [{
+                    label: 'Prix (€)',
+                    data: sortedProducts.map(p => p.price),
+                    backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                    borderColor: '#3B82F6',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        console.log('Graphiques créés avec succès!');
+    </script>
+</body>
+</html>
